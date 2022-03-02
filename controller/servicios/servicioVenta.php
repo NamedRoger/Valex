@@ -1,11 +1,14 @@
 <?php
-require '../functions.php';
-session_start();
-$connexion = Conexion();
-$session =  $_SESSION;
+
+use Valex\Persistence\DataBase;
+
+include '../../database/database.php';
+include '../servicios/servicioSesion.php';
 
 function obtenerVentas(){
-    global $connexion;
+    $database = DataBase::getInstance();
+
+    $connexion = $database->getConexion();
     $query = "SELECT v.idVenta, 
                      v.idCliente,
                      v.monto,
@@ -21,7 +24,9 @@ function obtenerVentas(){
 }
 
 function obtenerVenta($idVenta){
-    global $connexion;
+    $database = DataBase::getInstance();
+
+    $connexion = $database->getConexion();
     $query = "SELECT v.idVenta, 
                      v.idCliente,
                      v.monto,
@@ -41,7 +46,9 @@ function obtenerVenta($idVenta){
 }
 
 function obtenerProductosVenta($idVenta){
-    global $connexion;
+    $database = DataBase::getInstance();
+
+    $connexion = $database->getConexion();
     $query = "SELECT * FROM venta_productos AS vp WHERE vp.idVenta = '$idVenta'";
     $resutl = $connexion->query($query);
     $productos = [];
@@ -115,13 +122,6 @@ function getDetallesProducto($idProducto)
 {
     global $connexion;
     $query = "SELECT * FROM productos WHERE idProducto = $idProducto";
-    return $connexion->query($query)->fetch_object();
-}
-
-function getDetallesCliente($idCliente)
-{
-    global $connexion;
-    $query = "SELECT * FROM clientes WHERE idCliente = '$idCliente'";
     return $connexion->query($query)->fetch_object();
 }
 

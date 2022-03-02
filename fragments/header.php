@@ -1,5 +1,5 @@
 			<!-- main-header -->
-			<div class="main-header sticky side-header nav nav-item">
+			<div class="main-header sticky side-header nav nav-item sticky-pin" style="margin-bottom: -63px;">
 				<div class="container-fluid">
 					<div class="main-header-left ">
 						<div class="responsive-logo">
