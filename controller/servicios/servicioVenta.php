@@ -1,14 +1,12 @@
 <?php
 
-use Valex\Persistence\DataBase;
-
-include '../../database/database.php';
-include '../servicios/servicioSesion.php';
+use Valex\Clases\DataBase;
+use Valex\Clases\ProductoVenta;
+use Valex\Clases\Stock;
+use Valex\Clases\Venta;
 
 function obtenerVentas(){
-    $database = DataBase::getInstance();
-
-    $connexion = $database->getConexion();
+    $conexion =  DataBase::getInstance()->getConexion();
     $query = "SELECT v.idVenta, 
                      v.idCliente,
                      v.monto,
@@ -17,16 +15,14 @@ function obtenerVentas(){
               FROM ventas AS v
               INNER JOIN clientes AS c ON c.idCliente = v.idCliente";
 
-    $result = $connexion->query($query);
+    $result = $conexion->query($query);
     while($venta = $result->fetch_object())
         $ventas[] = $venta;
     return $ventas;
 }
 
 function obtenerVenta($idVenta){
-    $database = DataBase::getInstance();
-
-    $connexion = $database->getConexion();
+    $conexion =  DataBase::getInstance()->getConexion();
     $query = "SELECT v.idVenta, 
                      v.idCliente,
                      v.monto,
@@ -40,21 +36,18 @@ function obtenerVenta($idVenta){
               INNER JOIN users as u ON u.idUsuario = v.idVendedor
               WHERE v.idVenta = '$idVenta'";
 
-    $result = $connexion->query($query);
+    $result = $conexion->query($query);
 
     return $result->fetch_object();
 }
 
 function obtenerProductosVenta($idVenta){
-    $database = DataBase::getInstance();
+    $conexion =  DataBase::getInstance()->getConexion();
 
-    $connexion = $database->getConexion();
     $query = "SELECT * FROM venta_productos AS vp WHERE vp.idVenta = '$idVenta'";
-    $resutl = $connexion->query($query);
+    $resutl = $conexion->query($query);
     $productos = [];
     while($producto = $resutl->fetch_object()){
-        $detalleProducto = getDetallesProducto($producto->idProducto);
-        $producto->nombre = $detalleProducto->nombre;
         $productos[] = $producto;
     }
     return $productos;
@@ -63,90 +56,34 @@ function obtenerProductosVenta($idVenta){
 
 function registrarVenta($ventaData, $cliente)
 {
-    global $connexion;
-    $idVenta = 1;
-    $monto = (float)0.0;
-    $productos = [];
+    $stock = new Stock($ventaData->idSucursal);
 
-    foreach($ventaData->productos as $producto){
-        $detalleProducto = getDetallesProducto($producto->idProducto);
-        if($detalleProducto == null)
-            throw new Exception("Ocurrió un error al registar la compra (No se encuentra un producto)");
-        
-        $precio = precioCliente($detalleProducto, $cliente);
-        $producto->precio = $precio;
-        $producto->medida = $detalleProducto->medida;
-        $producto->total = calcularTotalProducto($detalleProducto, $precio, $producto->cantidad);
-        $productos[] = $producto;
+    $productosVenta = [];
+    foreach($ventaData->productos as $productoInfo){
+        $producto = getProductoById($productoInfo->idProducto);
+        $productosVenta[] = new ProductoVenta(
+            $producto->idProducto,
+            $productoInfo->cantidad,
+            $producto->obtenerPrecioCliente($cliente),
+            $producto->medida);
     }
 
-    foreach($productos as $producto){
-        $monto += (float) $producto->total;
+
+    $venta = new Venta($ventaData->idSucursal,$cliente,$ventaData->idVendedor, $productosVenta);
+    $venta->calcularTotal();
+
+    $venta->registrarVenta();
+
+    foreach($venta->proudctos as $producto)
+    {
+        if($stock->validarExistenciaDeProducto($producto->idProducto) 
+            && ($stock->obtenerCantidadProducto($producto->idProducto) - $producto->cantidad >= 0)){
+            $venta->registrarProducto($producto);
+            $stock->reducirProducto($producto->idProducto, $producto->cantidad);
+        }else{
+            throw new Exception("No se puede registrar el producto $producto->idProducto");
+        }
     }
 
-    $query = "INSERT INTO ventas (idVendedor, idCliente, idSucursal, monto) 
-        VALUES ('$ventaData->idVendedor','$ventaData->idCliente','$ventaData->idSucursal','$monto')"; 
-    $connexion->query($query);
-    $idVenta = $connexion->insert_id;
-
-    if($idVenta == null) {
-        throw new Exception("Ocurrió un error al registar la compra");
-    }
-
-    registarProductosEnVenta($idVenta, $productos);
-
-    return $idVenta;
-}
-
-function registarProductosEnVenta($venta, $productos){
-    foreach($productos as $producto){
-        registarProductoEnVenta($venta, $producto);
-    }
-}
-
-function registarProductoEnVenta($venta, $producto)
-{
-    global $connexion;
-    $query = "INSERT INTO venta_productos (idVenta, idProducto,cantidad, precio, medida, total) 
-              VALUES ('$venta',
-              '$producto->idProducto',
-              '$producto->cantidad',
-              '$producto->precio',
-              '$producto->medida',
-              '$producto->total')";
-
-    $connexion->query($query);
-}
-
-function getDetallesProducto($idProducto)
-{
-    global $connexion;
-    $query = "SELECT * FROM productos WHERE idProducto = $idProducto";
-    return $connexion->query($query)->fetch_object();
-}
-
-function calcularTotalProducto($producto, $precioCliente, $cantidad)
-{
-    $precio = 0;
-    $precio = $precioCliente * $cantidad;
-    return $precio;
-}
-
-function precioCliente($producto, $cliente){
-    $precioCliente  = 0;
-    switch ($cliente->precio) {
-        case 1:
-            $precioCliente = $producto->venta;
-            break;
-        case 2:
-            $precioCliente = $producto->medio;
-            break;
-        case 3:
-            $precioCliente = $producto->mayoreo;
-            break;
-        default:
-            $precioCliente = 1;
-            break;
-    }
-    return $precioCliente;
+    return $venta->idVenta;
 }

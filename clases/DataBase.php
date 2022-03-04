@@ -1,5 +1,5 @@
 <?php 
-namespace Valex\Persistence;
+namespace Valex\Clases;
 
 class DataBase
 {

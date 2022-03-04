@@ -1,6 +1,5 @@
 <? 
 use Valex\Persistence\DataBase;
-include '../../database/database.php';
 
 function abrirCaja($cantidad){
 

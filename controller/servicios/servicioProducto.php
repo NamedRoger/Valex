@@ -1,21 +1,50 @@
 <?php
 
-use Valex\Persistence\DataBase;
-
-include '../../database/database.php';
+use Valex\Clases\DataBase;
+use Valex\Clases\Producto;
 
 function getProductoById($id)
 {
-    $database = DataBase::getInstance();
-    $connexion = $database->getConexion();
+    $conexion =  DataBase::getInstance()->getConexion();
     $query = "SELECT * FROM productos WHERE idProducto = $id";
-    return $connexion->query($query)->fetch_object();
+    $result = $conexion->query($query)->fetch_object();
+    $producto = new Producto(
+        $result->codigo,
+        $result->idCategoria,
+        $result->medida,
+        $result->nombre,
+        $result->compra,
+        $result->venta,
+        $result->medio,
+        $result->mayoreo
+    );
+
+    $producto->idProducto = $result->idProducto;
+
+    return $producto;
 }
 
-function getProductoByCodigo($codgio)
+function getProductoByCodigo($codigo)
 {
+    $conexion =  DataBase::getInstance()->getConexion();
+    $query = "SELECT * FROM productos WHERE codigo = $codigo";
+    return $conexion->query($query)->fetch_object();
 }
 
-function getProductosFilter($filter)
+function getProductos($filter = null)
 {
+    $productos = [];
+    $conexion =  DataBase::getInstance()->getConexion();
+    $query = "SELECT p.* FROM productos AS p ";
+
+    if(isset($filter)){
+        $query .= "WHERE p.nombre LIKE '%$filter%'";
+    }
+
+    $result = $conexion->query($query);
+    while($producto = $result->fetch_object()){
+        $productos[] = $producto;
+    }
+    return $productos;
 }
+
