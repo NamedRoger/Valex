@@ -37,7 +37,7 @@ try{
 
         $result = [
             "success" => true,
-            "data" => $cliente
+            "data" => $idVenta
         ];
 
         echo json_encode($result);
