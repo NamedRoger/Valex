@@ -38,9 +38,10 @@ function getProductos($filter = null)
     $query = "SELECT p.* FROM productos AS p ";
 
     if(isset($filter)){
-        $query .= "WHERE p.nombre LIKE '%$filter%'";
+        $query .= "WHERE p.nombre LIKE '%$filter%' ";
     }
 
+    $query .= "LIMIT 15";
     $result = $conexion->query($query);
     while($producto = $result->fetch_object()){
         $productos[] = $producto;

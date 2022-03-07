@@ -54,6 +54,19 @@ $con = 	Conexion();
 								<i class="bi bi-search"></i>
 							</button>
 						</div>
+						<div class="mb-xl-0"> 
+							<div class="btn-group dropdown"> 
+								<span class="btn btn-warning" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Caja</span> 
+								<button type="button" class="btn btn-warning dropdown-toggle dropdown-toggle-split" id="dropdownMenuDate" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 
+									<span class="sr-only">Toggle Dropdown</span> 
+								</button> 
+								<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuDate" x-placement="bottom-end"> 
+									<button class="dropdown-item">Abrir</button> 
+									<button class="dropdown-item">Cerrar</button> 
+									<button class="dropdown-item">Retirar</button> 
+								</div> 
+							</div> 
+						</div>
 					</div>
 				</div>
 
@@ -71,7 +84,7 @@ $con = 	Conexion();
 								</div>
 								<div class="row">
 									<di class="col">
-										<table class="table table-bordered">
+										<table class="table table-bordered" id="tablaProductosVenta">
 											<thead>
 												<tr>
 													<td>Producto</td>
@@ -97,12 +110,12 @@ $con = 	Conexion();
 					</div>
 					<div class="col-4">
 						<div class="card">
-							<div class="card-body">
+							<div class="card-body" id="infoVenta">
 								<div class="row">
 									<div class="col">
 										<dl>
 											<dt>Cliente</dt>
-											<dd>---</dd>
+											<dd id="infoCliente">---</dd>
 
 											<dt>Total</dt>
 											<dd><span>$</span> 0.00</dd>
@@ -111,7 +124,7 @@ $con = 	Conexion();
 								</div>
 								<div class="row">
 									<div class="col">
-										<button class="btn btn-danger">Cancelar</button>
+										<button id="cancelarVenta" class="btn btn-danger">Cancelar</button>
 
 										<button class="btn btn-success">Finalizar</button>
 									</div>

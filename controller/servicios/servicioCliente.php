@@ -12,11 +12,18 @@ function getClienteById($idCliente)
     return $cliente;
 }
 
-function getClientes()
+function getClientes($filter = null)
 {
     $clientes = [];
     $conexion =  DataBase::getInstance()->getConexion();
-    $query = "SELECT * FROM clientes";
+    $query = "SELECT * FROM clientes ";
+
+    if(isset($filter)){
+        $query .= "WHERE nombre LIKE '%$filter%'  ";
+    }
+
+    $query .= "LIMIT 15";
+
     $result = $conexion->query($query);
     while($clienteResult = $result->fetch_object()){
         $clientes[] = new Cliente(

@@ -41,20 +41,19 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="formCliente">
-                    <div class="form-group">
-                        <label for="exampleDataList" class="form-label">Cliente</label>
-                        <input class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Buscar...">
-                        <datalist id="datalistOptions">
-                            <option value="San Francisco">
-                            <option value="New York">
-                            <option value="Seattle">
-                            <option value="Los Angeles">
-                            <option value="Chicago">
-                        </datalist>
+                <form id="formBuscarCliente">
+                    <div class="form-group row">
+                        <div class="col-9">
+                            <input class="form-control" id="buscarClienteNombre" placeholder="Buscar..." name="buscarClienteNombre">
+                        </div>
+                        <div class="col-3">
+                            <button class="btn btn-primary">Buscar</button>
+                        </div>
                     </div>
                     <div>
-                        <button class="btn btn-primary">Agregar</button>
+                        <table style="width: 100%;" id="clientesEncontrados">
+
+                        </table>
                     </div>
                 </form>
             </div>
@@ -70,20 +69,19 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="formCliente">
-                    <div class="form-group">
-                        <label for="exampleDataList" class="form-label">Producto</label>
-                        <input class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Buscar...">
-                        <datalist id="datalistOptions">
-                            <option value="San Francisco">
-                            <option value="New York">
-                            <option value="Seattle">
-                            <option value="Los Angeles">
-                            <option value="Chicago">
-                        </datalist>
+            <form id="formBuscarProducto">
+                    <div class="form-group row">
+                        <div class="col-9">
+                            <input class="form-control" id="buscarProductoNombre" placeholder="Buscar..." name="buscarProductoNombre">
+                        </div>
+                        <div class="col-3">
+                            <button class="btn btn-primary">Buscar</button>
+                        </div>
                     </div>
                     <div>
-                        <button class="btn btn-primary">Agregar</button>
+                        <table style="width: 100%;" id="productosEncontrados">
+
+                        </table>
                     </div>
                 </form>
             </div>
