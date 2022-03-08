@@ -12,6 +12,25 @@ include '../servicios/servicioProducto.php';
 include '../servicios/servicioCliente.php';
 include '../servicios/servicioVenta.php';
 
-$ventas = obtenerVentas();
 
-echo json_encode($ventas);
+try{
+    $fechaInicio = $_GET['fechaInicio'];
+    $fechaFin = $_GET['fechaFin'];
+    $vendedor = $_GET['idVendedor'];
+    $cliente = $_GET['idCliente'];
+    $sucursal = getSucursal();
+
+    $filters = [
+        "idVendedor" => $vendedor,
+        "fechaInicio" => $fechaInicio,
+        "fechaFin" => $fechaFin,
+        "idCliente" => $cliente,
+    ];
+
+
+    $ventas = obtenerVentas($sucursal,$filters);
+    echo json_encode($ventas);
+
+} catch(Exception $excetption){
+    echo json_encode($excetption->getMessage());
+}

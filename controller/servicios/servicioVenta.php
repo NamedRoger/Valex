@@ -5,19 +5,38 @@ use Valex\Clases\ProductoVenta;
 use Valex\Clases\Stock;
 use Valex\Clases\Venta;
 
-function obtenerVentas(){
+function obtenerVentas($idSucursal,$filters = null){
     $conexion =  DataBase::getInstance()->getConexion();
     $query = "SELECT v.idVenta, 
                      v.idCliente,
                      v.monto,
                      v.fecha,
-                     c.nombre as cliente
+                     c.nombre as cliente,
+                     u.nombre as vendedor
               FROM ventas AS v
-              INNER JOIN clientes AS c ON c.idCliente = v.idCliente";
+              INNER JOIN clientes AS c ON c.idCliente = v.idCliente
+              INNER JOIN users AS u ON u.idUsuario = v.idVendedor
+              WHERE v.idSucursal = $idSucursal";
 
+        if(!empty($filters['idVendedor'])) {
+            $id = intval($filters['idVendedor']);
+            $query .= " AND v.idVendedor = $id";
+        }
+        if(!empty($filters['idCliente'])) $query .= " AND v.idCliente = ".$filters['idCliente']."";
+        if(!empty($filters['fechaInicio'])){
+            $fecha = date('Y-m-d',strtotime($filters['fechaInicio'])); 
+            $query .= " AND v.fecha >= CAST('$fecha' as datetime)";
+        }
+        if(!empty($filters['fechaFin'])) {
+            $fecha = date('Y-m-d',strtotime($filters['fechaFin'])); 
+            $query .= " AND v.fecha <= CAST( '$fecha' as datetime)";
+        }
+    
     $result = $conexion->query($query);
+    $ventas = [];
     while($venta = $result->fetch_object())
         $ventas[] = $venta;
+        
     return $ventas;
 }
 

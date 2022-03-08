@@ -5,26 +5,18 @@ CREATE TABLE `ventas` (
   `idCliente` int(11) NOT NULL,
   `idSucursal` int(11) NOT NULL,
   `monto` decimal(10,2) NOT NULL,
-  `fecha` timestamp NOT NULL DEFAULT current_timestamp()
+  `fecha` timestamp NOT NULL DEFAULT current_timestamp(),
+  `pago` decimal(10,2) NOT NULL,
+  `cambio` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
 
--- Indices de la tabla `ventas`
---
 ALTER TABLE `ventas`
   ADD PRIMARY KEY (`idVenta`);
 
---
--- AUTO_INCREMENT de las tablas volcadas
---
 
---
--- AUTO_INCREMENT de la tabla `ventas`
---
 ALTER TABLE `ventas`
-  MODIFY `idVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
-COMMIT;
+  MODIFY `idVenta` int(11) NOT NULL AUTO_INCREMENT;
 
 
 
@@ -47,30 +39,24 @@ ALTER TABLE `venta_productos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
 
-CREATE TABLE `arqueo_caja` (
-  `id` int(11) NOT NULL,
-  `idUsuario` int(11) NOT NULL,
-  `fechaInicio` datetime NOT NULL,
-  `fechaFin` datetime NOT NULL,
-  `montoInicial` decimal(10,2) NOT NULL,
-  `montoFinal` decimal(10,2) NOT NULL,
-  `estatus` tinyint(4) NOT NULL DEFAULT 1
+CREATE TABLE arqueo_caja (
+  id int(11) NOT NULL,
+  idUsuario int(11) NOT NULL,
+  idSucursal int(11) NOT NULL,
+  fechaInicio datetime NOT NULL,
+  fechaFin datetime NOT NULL,
+  montoInicial decimal(10,2) NOT NULL,
+  montoFinal decimal(10,2) NOT NULL,
+  estatus tinyint(4) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
-ALTER TABLE `arqueo_caja`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE arqueo_caja
+  ADD PRIMARY KEY (id);
 
 
-ALTER TABLE `arqueo_caja`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-COMMIT;
+ALTER TABLE arqueo_caja
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
