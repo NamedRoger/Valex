@@ -35,7 +35,7 @@ $con = 	Conexion();
 				<div class="breadcrumb-header justify-content-between">
 					<div class="my-auto">
 						<div class="d-flex">
-							<h3 class="content-title mb-0 my-auto">Vetna</h3>
+							<h3 class="content-title mb-0 my-auto">Venta</h3>
 						</div>
 					</div>
 					<div class="d-flex my-xl-auto right-content">
@@ -61,9 +61,8 @@ $con = 	Conexion();
 									<span class="sr-only">Toggle Dropdown</span> 
 								</button> 
 								<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuDate" x-placement="bottom-end"> 
-									<button class="dropdown-item">Abrir</button> 
-									<button class="dropdown-item">Cerrar</button> 
-									<button class="dropdown-item">Retirar</button> 
+									<button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#abrirCaja" >Abrir</button> 
+									<button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#cerrarCaja">Cerrar</button> 
 								</div> 
 							</div> 
 						</div>
@@ -74,17 +73,17 @@ $con = 	Conexion();
 					<div class="col-8">
 						<div class="card">
 							<div class="card-body">
-								<div class="row">
+								<!-- <div class="row">
 									<div class="col">
 										<div>
 											<label for="">Producto:</label>
 											<input type="text" placeholder="buscar..."/>
 										</div>
 									</div>
-								</div>
+								</div> -->
 								<div class="row">
 									<di class="col">
-										<table class="table table-bordered" id="tablaProductosVenta">
+										<table class="table table-bordered" >
 											<thead>
 												<tr>
 													<td>Producto</td>
@@ -94,12 +93,12 @@ $con = 	Conexion();
 													<td></td>
 												</tr>
 											</thead>
-											<tbody></tbody>
+											<tbody id="tablaProductosVenta"></tbody>
 											<tfoot>
 												<tr class="tx-blod">
 													<td colspan="2"></td>
 													<td>TOTAL</td>
-													<td>0.00</td>
+													<td id="totalVentaTabla">$0.00</td>
 												</tr>
 											</tfoot>
 										</table>
@@ -118,7 +117,7 @@ $con = 	Conexion();
 											<dd id="infoCliente">---</dd>
 
 											<dt>Total</dt>
-											<dd><span>$</span> 0.00</dd>
+											<dd id="totalVentaDetalle">$0.00</dd>
 										</dl>
 									</div>
 								</div>
@@ -126,7 +125,7 @@ $con = 	Conexion();
 									<div class="col">
 										<button id="cancelarVenta" class="btn btn-danger">Cancelar</button>
 
-										<button class="btn btn-success">Finalizar</button>
+										<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#terminarVenta">Finalizar</button>
 									</div>
 								</div>
 							</div>

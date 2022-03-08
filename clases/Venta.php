@@ -11,6 +11,8 @@ class Venta
     public $idVendedor;
     public $total;
     private $conexion;
+    public $pago;
+    public $cambio;
 
     public function __construct($idSucursal, $cliente, $idVendedor, $proudctos = [])
     {
@@ -65,5 +67,12 @@ class Venta
         foreach ($this->proudctos as $producto) {
             $this->total += $producto->total;
         }
+    }
+
+    public function pagar($monto){
+        $cambio = $monto - $this->total;
+        $registrarPagoQuery = "UPDATE ventas SET pago = $monto, cambio = $cambio WHERE idVenta = $this->idVenta";
+        $this->conexion->query($registrarPagoQuery);
+        return $cambio; 
     }
 }

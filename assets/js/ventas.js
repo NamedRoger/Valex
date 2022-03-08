@@ -1,42 +1,134 @@
-const CLIENTE_VENTA_KEY = "clienteVenta";
-const PRODUCTOS_VENTA_KEY = "productosVenta";
-const EVENTO_ALTER_PROD = "alter.prod";
-const INICIAR_VENTA_KEY = "";
+function EventProductoTabla() {
+    this.handlers = [];
+}
 
-const eventoAltertacionProdcutos = new Event(EVENTO_ALTER_PROD);
-
-class ProductoVenta {
-    idProducto;
-    cantidad;
-    precio = 0;
-
-    constructor(idProducto, cantidad, precio){
-        this.idProducto = idProducto;
-        this.cantidad = cantidad;
-        this.precio = precio;
+EventProductoTabla.prototype = {
+    subscribe: function (fn) {
+        this.handlers.push(fn);
+    },
+    unsubscribe: function (fn) {
+        this.handlers = this.handlers.filter(i => i !== fn);
+    },
+    fire: function (o, thisObj) {
+        const scope = thisObj || window;
+        this.handlers.forEach(i => i.call(scope, o));
     }
 }
 
 
+const CLIENTE_VENTA_KEY = "clienteVenta";
+const PRODUCTOS_VENTA_KEY = "productosVenta";
+const EVENTO_ALTER_PROD = "alter.prod";
+const INICIAR_VENTA_KEY = "ventaIniciada";
+const eventoAltertacionProdcutos = new Event(EVENTO_ALTER_PROD);
+const eventTotalProd = new EventProductoTabla();
+
+class ProductoVenta {
+    nombre;
+    idProducto;
+    cantidad;
+    precio = 0;
+
+    constructor(idProducto, cantidad, precio, nombre = "") {
+        this.idProducto = idProducto;
+        this.cantidad = cantidad;
+        this.precio = precio;
+        this.nombre = nombre;
+    }
+}
+
+class Venta {
+    productos = [];
+    pago = 0;
+    idCliente;
+
+    constructor(idCliente,pago, productos = []){
+        this.idCliente = idCliente;
+        this.pago = pago;
+        this.productos = productos;
+    }
+}
+
 (() => document.addEventListener('DOMContentLoaded', main))();
 
-
 async function main() {
-    if(ventaExistente()){
-        console.log(ventaExistente());
-    } 
+    const modalAbrirCaja = document.querySelector('#abrirCaja');
     const tablaProductosVenta = document.querySelector("#tablaProductosVenta");
+    const totalTabla = document.querySelector("#totalVentaTabla");
+    const totalVentaDetalle = document.querySelector("#totalVentaDetalle");
+    const modalFinalizarVenta = document.querySelector("#terminarVenta");
+    const totalVentaInfo = document.querySelector("#totalVentaInfo");
+    const cambioVentaInfo = document.querySelector("#cambioVentaInfo");
+    const formPagarVenta = document.querySelector("#formPagarVenta");
 
-
-    tablaProductosVenta.addEventListener(EVENTO_ALTER_PROD, () => {
-        console.log(getItemLocalStorage(PRODUCTOS_VENTA_KEY));
+    document.querySelector("#txtPago").addEventListener("keyup",function(){
+        const productosEnVenta = obtenerProductosEnVenta();
+        const total = productosEnVenta.reduce((sum, producto) => sum + (producto.precio * producto.cantidad), 0);
+        const pago = new Number(this.value);
+        const cambio = pago < total?0:pago - total;
+        cambioVentaInfo.textContent = totalCurrency(cambio);
     });
+
+    formPagarVenta.addEventListener("submit",function (e){
+        e.preventDefault();
+        const productos = obtenerProductosEnVenta();
+        const cliente = obtenerClienteVenta();
+        const {pagoVenta} = Object.fromEntries(new FormData(this));
+        const venta = new Venta(cliente.idCliente,new Number(pagoVenta),productos);
+        registarVenta(venta).then(res => {
+            if(res.success){
+                finalizarVenta();
+                eventTotalProd.fire();
+                mostrarAlerta("se creo la venta " + res.data,"success");
+                bootstrap.Modal.getInstance(modalFinalizarVenta).hide();
+            }else{
+                mostrarAlerta(res.error,"error");
+            }
+        })
+    });
+
+    modalFinalizarVenta.addEventListener('show.bs.modal',() => {
+        const productosEnVenta = obtenerProductosEnVenta();
+        const total = productosEnVenta.reduce((sum, producto) => sum + (producto.precio * producto.cantidad), 0);
+        totalVentaInfo.textContent = totalCurrency(total);
+        cambioVentaInfo.textContent = totalCurrency(0);
+        document.querySelector('#txtPago').min = total;
+        document.querySelector('#txtPago').focus();
+    });
+
+    modalFinalizarVenta.addEventListener('hide.bs.modal',() => {
+        formPagarVenta.reset();
+        totalVentaInfo.textContent = totalCurrency(0);
+        cambioVentaInfo.textContent = totalCurrency(0);
+    });
+
+    eventTotalProd.subscribe(() => {
+        const productosEnVenta = obtenerProductosEnVenta();
+        const total = productosEnVenta.reduce((sum, producto) => sum + (producto.precio * producto.cantidad), 0);
+        totalTabla.textContent = totalCurrency(total);
+        totalVentaDetalle.textContent = totalCurrency(total);
+    });
+
+    eventTotalProd.subscribe(function(l){
+        tablaProductosVenta.innerHTML = "";
+        const productosVenta = obtenerProductosEnVenta();
+
+        productosVenta.forEach(producto => {
+            tablaProductosVenta.append(crearProductoVenta(producto));
+        });
+    });
+
+    if (ventaExistente()) {
+        reanudarVenta();
+        eventTotalProd.fire();
+    }
 
     const btnCancelarVenta = document.querySelector("#cancelarVenta");
 
     btnCancelarVenta.addEventListener("click", () => {
-        quitarClienteVenta();
-        removerProductoDeVenta();
+        finalizarVenta();
+        eventTotalProd.fire();
+        tablaProductosVenta.innerHTML = "";
     });
 
     const buscarClienteModal = document.querySelector('#buscarCliente');
@@ -92,49 +184,45 @@ async function main() {
     formBuscarProducto.addEventListener("submit", function (e) {
         e.preventDefault();
         let { buscarProductoNombre } = Object.fromEntries(new FormData(this));
-        buscarProductoPorNombre(buscarProductoNombre).then(res => {
-            tablaProductosEncontrados.innerHTML = "";
-            let productos = res.data;
+        if (buscarProductoNombre.length > 3) {
+            buscarProductoPorNombre(buscarProductoNombre).then(res => {
+                tablaProductosEncontrados.innerHTML = "";
+                let productos = res.data;
+                productos.forEach((producto) => {
+                    const tr = crearElemento('tr');
+                    const tdNombre = crearElemento('td');
+                    const tdButton = crearElemento('td');
+                    const button = crearElemento('button');
 
-            productos.forEach((producto) => {
-                const tr = crearElemento('tr');
-                const tdNombre = crearElemento('td');
-                const tdButton = crearElemento('td');
-                const button = crearElemento('button');
+                    button.classList.add('btn', 'btn-sm', 'btn-success')
+                    button.textContent = 'agregar';
+                    button.type = "button";
 
-                button.classList.add('btn', 'btn-sm', 'btn-success')
-                button.textContent = 'agregar';
+                    tdButton.append(button);
+                    tdNombre.textContent = producto.nombre;
 
-                button.addEventListener('click', function () {
-                    validarExistenciaProducto(producto).then(res => {
-                        if (res) {
-                            agregarProductoAVenta(producto);
-                            tablaProductosVenta.dispatchEvent(eventoAltertacionProdcutos);
-                            bootstrap.Modal.getInstance(buscarProductoModal).hide();
-                        } else {
-                            mostrarAlerta("No hay en exitencia", "error");
-                        }
+                    tr.append(tdNombre);
+                    tr.append(tdButton);
+                    tablaProductosEncontrados.append(tr);
+
+                    button.addEventListener('click', function () {
+                        validarExistenciaProducto(producto).then(res => {
+                            if (res) {
+                                bootstrap.Modal.getInstance(buscarProductoModal).hide();
+                                let productoVenta = transformarProductoToProductoVenta(producto);
+                                agregarProductoAVenta(productoVenta);
+                                eventTotalProd.fire("agregar");
+                            } else {
+                                mostrarAlerta("No hay en exitencia", "error");
+                            }
+                        });
                     });
                 });
-
-                tdButton.append(button);
-                tdNombre.textContent = producto.nombre;
-
-                tr.append(tdNombre);
-                tr.append(tdButton);
-                tablaProductosEncontrados.append(tr);
             });
-        });
+        }
     });
-    // if(await verificarAperturaDeCaja()) {
-
-    // }
 }
 
-
-function registrarNuevoCliente() {
-
-}
 
 function verificarAperturaDeCaja() {
 
@@ -148,30 +236,34 @@ function cerrarCaja() {
 
 }
 
-function retirarCaja() {
-
-}
-
-function ventaExistente(){
+//--------------------------------- ventas
+function ventaExistente() {
     let cliente = obtenerClienteVenta();
-    return cliente !== null || cliente !== undefined;
+    return cliente !== null && cliente !== undefined;
 }
 
-function empezarVenta(){
-    setItemLocalStorage("")
+async function registarVenta(data) {
+    const res = await (await fetch("/controller/ventas/crear.php",{
+        body: JSON.stringify(data),
+        method: 'post'
+    })).json();
+
+    return res;
 }
 
-function registarVenta() {
-
-}
-
-function cancelarVenta() {
-
+function finalizarVenta() {
+    quitarClienteVenta();
+    removerTodosLosProductos();
 }
 
 function reanudarVenta() {
-    const infoCliente = document.querySelector("#infoVenta #infoCliente");
-    infoCliente.textContent = cliente.nombre;
+    const cliente = obtenerClienteVenta();
+    actualizarInformacionClientVenta(cliente);
+}
+
+//--------------------------------- clietnes
+function registrarNuevoCliente() {
+
 }
 
 async function buscarCliente($nombre) {
@@ -180,27 +272,34 @@ async function buscarCliente($nombre) {
 }
 
 function agregarClienteAVenta(cliente) {
-    const infoCliente = document.querySelector("#infoVenta #infoCliente");
-    infoCliente.textContent = cliente.nombre;
-    cliente.idCliente = new Number(cliente.idCliente);
-    cliente.precio = new Number(cliente.precio);
-
-    setItemLocalStorage(CLIENTE_VENTA_KEY, JSON.stringify(cliente));
+    actualizarClienteVenta(cliente);
 }
 
 function quitarClienteVenta() {
-    const infoCliente = document.querySelector("#infoVenta #infoCliente");
-    infoCliente.textContent = "---";
-
     removeItemLocalStorage(CLIENTE_VENTA_KEY);
+    actualizarInformacionClientVenta(null);
 }
 
-function obtenerClienteVenta(){
+function obtenerClienteVenta() {
     let cliente = JSON.parse(getItemLocalStorage(CLIENTE_VENTA_KEY));
     return cliente;
 }
 
 
+function actualizarClienteVenta(cliente) {
+    cliente.idCliente = new Number(cliente.idCliente);
+    cliente.precio = new Number(cliente.precio);
+    setItemLocalStorage(CLIENTE_VENTA_KEY, JSON.stringify(cliente));
+    actualizarInformacionClientVenta(cliente);
+}
+
+function actualizarInformacionClientVenta(cliente) {
+    const infoCliente = document.querySelector("#infoVenta #infoCliente");
+    infoCliente.textContent = "---";
+    infoCliente.textContent = (cliente) ? cliente.nombre : "---";
+}
+
+//--------------------------------- productos
 function buscarProductoPorCodigo() {
 
 }
@@ -210,59 +309,119 @@ async function buscarProductoPorNombre($filter = "") {
     return await res.json();
 }
 
+function transformarProductoToProductoVenta(producto){
+    let productoVenta;
+    const cliente = obtenerClienteVenta();
+    let precio = (cliente.precio === 1) ? new Number(producto.venta) :
+        (cliente.precio === 2) ? new Number(producto.medio) : new Number(producto.mayoreo);
+
+    productoVenta = new ProductoVenta(producto.idProducto, 1, precio, producto.nombre);
+    return productoVenta;
+}
+
+function crearProductoVenta(producto){
+    const tr = crearElemento('tr');
+    const tdProducto = crearElemento('td');
+    const tdPrecio = crearElemento('td');
+    const tdCantidad = crearElemento('td');
+    const tdTotal = crearElemento('td');
+    const tdBotones = crearElemento('td');
+    const boton = crearElemento('button');
+    const inputCantidad = crearElemento('input');
+
+    boton.textContent = "Borrar";
+    boton.classList.add("btn","btn-sm","btn-danger");
+    boton.addEventListener('click', () => {
+        console.log('hola')
+        removerProductoDeVenta(producto);
+        eventTotalProd.fire();
+    });
+
+
+    inputCantidad.classList.add('w-25');
+    inputCantidad.type = "number";
+    inputCantidad.min = 1;
+    inputCantidad.value = producto.cantidad;
+
+    inputCantidad.addEventListener('change',function(){
+        const cantidad = new Number(this.value)
+        aumentarCantidadProducto(producto,cantidad);
+        eventTotalProd.fire();
+    });
+
+    tdProducto.textContent = producto.nombre;
+    tdPrecio.textContent = totalCurrency(producto.precio);
+    tdCantidad.append(inputCantidad);
+    tdTotal.textContent = totalCurrency(producto.precio * producto.cantidad);
+    tdBotones.append(boton);
+
+    tr.append(tdProducto);
+    tr.append(tdPrecio);
+    tr.append(tdCantidad);
+    tr.append(tdTotal);
+    tr.append(tdBotones);
+
+    return tr;
+}
+
 function agregarProductoAVenta(producto) {
     let productosVenta = obtenerProductosEnVenta();
     const idxProductoEnVenta = obtenerProductoEnVenta(producto);
-    if(idxProductoEnVenta > -1){
+    if (idxProductoEnVenta > -1) {
         productosVenta[idxProductoEnVenta].cantidad++;
-    }else {
-        let productoVenta;
-        const cliente = obtenerClienteVenta();
-        let precio = (cliente.precio === 1)? new Number(producto.venta) :
-                    (cliente.precio === 2)? new Number(producto.medio) : new Number(producto.mayoreo);
-        console.log(precio)
-        productoVenta = new ProductoVenta(producto.idProducto,1,precio);
-        productosVenta.push(productoVenta);
+    } else {
+        productosVenta.push(producto);
     }
-    setItemLocalStorage(PRODUCTOS_VENTA_KEY, JSON.stringify(productosVenta));
+    actualizarProductosEnVenta(productosVenta);
 }
 
 function aumentarCantidadProducto(producto, cantidad) {
+    const productosEnVenta = obtenerProductosEnVenta();
     const productoEnVenta = obtenerProductoEnVenta(producto);
-    // prod
+    productosEnVenta[productoEnVenta].cantidad = cantidad;
+    actualizarProductosEnVenta(productosEnVenta);
 }
 
 function reducirCantidadProducto(producto, cantidad) {
-
+    const productosEnVenta = obtenerProductosEnVenta();
+    const productoEnVenta = obtenerProductoEnVenta(producto);
+    productosEnVenta[productoEnVenta].cantidad = cantidad < 0 ? 0 : cantidad;
+    actualizarProductosEnVenta(productosEnVenta);
 }
+
 
 function obtenerProductosEnVenta() {
     let productos = getItemLocalStorage(PRODUCTOS_VENTA_KEY) ? JSON.parse(getItemLocalStorage(PRODUCTOS_VENTA_KEY)) : [];
     return productos;
 }
 
-function obtenerProductoEnVenta (producto) {
+function obtenerProductoEnVenta(producto) {
     let productosVenta = obtenerProductosEnVenta();
     return productosVenta.findIndex(p => p.idProducto === producto.idProducto);
 }
 
 function removerProductoDeVenta(producto) {
+    let productosEnVenta = obtenerProductosEnVenta();
+    productosEnVenta = productosEnVenta.filter(i => i.idProducto !== producto.idProducto);
+    actualizarProductosEnVenta(productosEnVenta);
+}
+
+function removerTodosLosProductos() {
     removeItemLocalStorage(PRODUCTOS_VENTA_KEY);
 }
 
+function actualizarProductosEnVenta(productos) {
+    setItemLocalStorage(PRODUCTOS_VENTA_KEY, JSON.stringify(productos));
+}
 
 
 async function validarExistenciaProducto(producto) {
     let { data } = await (await fetch('/controller/stock/validar?idProducto=' + producto.idProducto)).json();
-
     return data;
 }
 
 
-
-
-
-
+const totalCurrency = (total) => new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(total);
 const crearElemento = elemento => document.createElement(elemento);
 const getItemLocalStorage = key => localStorage.getItem(key);
 const setItemLocalStorage = (key, value) => localStorage.setItem(key, value);

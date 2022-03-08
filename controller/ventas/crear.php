@@ -26,6 +26,9 @@ try{
         $idSucursal = getSucursal();
         $idUsuario = getIdUsuario();
 
+        if(!isset($idSucursal)){
+            throw new Exception("Necesita estar registrado en alguna sucursal");
+        }
         $ventaData->idVendedor = $idUsuario;
         $ventaData->idSucursal = $idSucursal;
 

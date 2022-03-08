@@ -74,6 +74,8 @@ function registrarVenta($ventaData, $cliente)
 
     $venta->registrarVenta();
 
+    $venta->pagar($ventaData->pago);
+
     foreach($venta->proudctos as $producto)
     {
         if($stock->validarExistenciaDeProducto($producto->idProducto) 
