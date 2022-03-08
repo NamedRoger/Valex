@@ -43,7 +43,7 @@ class Venta {
     pago = 0;
     idCliente;
 
-    constructor(idCliente,pago, productos = []){
+    constructor(idCliente, pago, productos = []) {
         this.idCliente = idCliente;
         this.pago = pago;
         this.productos = productos;
@@ -66,25 +66,30 @@ async function main() {
     const cambioVentaInfo = document.querySelector("#cambioVentaInfo");
     const formPagarVenta = document.querySelector("#formPagarVenta");
 
-    const {data} = await verificarAperturaDeCaja();
-    if(!data){
-        bootstrap.Modal.getOrCreateInstance(modalAbrirCaja).show();
-    }else {
-
+    try {
+        const { data } = await verificarAperturaDeCaja();
+        if (!data) {
+            bootstrap.Modal.getOrCreateInstance(modalAbrirCaja).show();
+        } else {
+            mostrarAlerta('No se puedo abrir la caja', 'error');
+        }
+    } catch (e) {
+        mostrarAlerta('Ocurrio un error', 'error');
     }
 
-    formAbrirCaja.addEventListener('submit',function(e){
+
+    formAbrirCaja.addEventListener('submit', function (e) {
         e.preventDefault();
-        const {monto} = Object.fromEntries(new FormData(this));
+        const { monto } = Object.fromEntries(new FormData(this));
         abrirCaja(monto).then(res => {
-            if(res.success){
-                mostrarAlerta("Se ha abierto la caja",'success');
+            if (res.success) {
+                mostrarAlerta("Se ha abierto la caja", 'success');
                 bootstrap.Modal.getOrCreateInstance(modalAbrirCaja).hide();
-                setItemLocalStorage(FONDO_KEY,JSON.stringify(res.data));
-            }else{
-                mostrarAlerta(res.error,'error');
+                setItemLocalStorage(FONDO_KEY, JSON.stringify(res.data));
+            } else {
+                mostrarAlerta(res.error, 'error');
             }
-        });
+        }).catch(err => mostrarAlerta('Ocurrio un error', 'error'));
     });
 
     modalAbrirCaja.addEventListener('hide.bs.modal', () => {
@@ -103,62 +108,62 @@ async function main() {
         document.querySelector('#totalCierre').textContent = totalCurrency(0);
     });
 
-    inputsCierre.forEach(i => i.addEventListener('keyup',function(){
+    inputsCierre.forEach(i => i.addEventListener('keyup', function () {
         const total = totalCierreForm();
         console.log(total)
-        document.querySelector('#totalCierre').textContent = totalCurrency(isNaN(total)?0:total);
+        document.querySelector('#totalCierre').textContent = totalCurrency(isNaN(total) ? 0 : total);
     }));
 
-    formCerrarCaja.addEventListener('submit', function(e){
+    formCerrarCaja.addEventListener('submit', function (e) {
         e.preventDefault();
-        const {id} = JSON.parse(getItemLocalStorage(FONDO_KEY));
-        cerrarCaja(id,totalCierreForm()).then(res => {
-            if(res.success){
-                mostrarAlerta("Se ha cerrado la caja",'success');
+        const { id } = JSON.parse(getItemLocalStorage(FONDO_KEY));
+        cerrarCaja(id, totalCierreForm()).then(res => {
+            if (res.success) {
+                mostrarAlerta("Se ha cerrado la caja", 'success');
                 bootstrap.Modal.getOrCreateInstance(modalCerrarCaja).hide();
                 removeItemLocalStorage(FONDO_KEY);
-            }else{
-                mostrarAlerta(res.error,'error');
+            } else {
+                mostrarAlerta(res.error, 'error');
             }
-        });
+        }).catch(err => mostrarAlerta('Ocurrio un error', 'error'));
     });
 
     const totalCierreForm = () => {
         return Object.entries(Object.fromEntries(new FormData(formCerrarCaja)))
-        .map(m => {
-            const t = (m[0] == 'monedas')? parseInt(m[1]): parseInt(m[0]) * parseInt(m[1]);
-            return isNaN(t)?0:t;
-        })
-        .reduce((s,c) => s +c,0);
+            .map(m => {
+                const t = (m[0] == 'monedas') ? parseInt(m[1]) : parseInt(m[0]) * parseInt(m[1]);
+                return isNaN(t) ? 0 : t;
+            })
+            .reduce((s, c) => s + c, 0);
     }
 
-    document.querySelector("#txtPago").addEventListener("keyup",function(){
+    document.querySelector("#txtPago").addEventListener("keyup", function () {
         const productosEnVenta = obtenerProductosEnVenta();
         const total = productosEnVenta.reduce((sum, producto) => sum + (producto.precio * producto.cantidad), 0);
         const pago = new Number(this.value);
-        const cambio = pago < total?0:pago - total;
+        const cambio = pago < total ? 0 : pago - total;
         cambioVentaInfo.textContent = totalCurrency(cambio);
     });
 
-    formPagarVenta.addEventListener("submit",function (e){
+    formPagarVenta.addEventListener("submit", function (e) {
         e.preventDefault();
         const productos = obtenerProductosEnVenta();
         const cliente = obtenerClienteVenta();
-        const {pagoVenta} = Object.fromEntries(new FormData(this));
-        const venta = new Venta(cliente.idCliente,new Number(pagoVenta),productos);
+        const { pagoVenta } = Object.fromEntries(new FormData(this));
+        const venta = new Venta(cliente.idCliente, new Number(pagoVenta), productos);
         registarVenta(venta).then(res => {
-            if(res.success){
+            if (res.success) {
                 finalizarVenta();
                 eventTotalProd.fire();
-                mostrarAlerta("se creo la venta " + res.data,"success");
+                mostrarAlerta("se creo la venta " + res.data, "success");
                 bootstrap.Modal.getInstance(modalFinalizarVenta).hide();
-            }else{
-                mostrarAlerta(res.error,"error");
+            } else {
+                mostrarAlerta(res.error, "error");
             }
-        })
+        }).catch(err => mostrarAlerta('Ocurrio un error', 'error'))
     });
 
-    modalFinalizarVenta.addEventListener('show.bs.modal',() => {
+    modalFinalizarVenta.addEventListener('show.bs.modal', () => {
         const productosEnVenta = obtenerProductosEnVenta();
         const total = productosEnVenta.reduce((sum, producto) => sum + (producto.precio * producto.cantidad), 0);
         totalVentaInfo.textContent = totalCurrency(total);
@@ -167,7 +172,7 @@ async function main() {
         document.querySelector('#txtPago').focus();
     });
 
-    modalFinalizarVenta.addEventListener('hide.bs.modal',() => {
+    modalFinalizarVenta.addEventListener('hide.bs.modal', () => {
         formPagarVenta.reset();
         totalVentaInfo.textContent = totalCurrency(0);
         cambioVentaInfo.textContent = totalCurrency(0);
@@ -180,7 +185,7 @@ async function main() {
         totalVentaDetalle.textContent = totalCurrency(total);
     });
 
-    eventTotalProd.subscribe(function(l){
+    eventTotalProd.subscribe(function (l) {
         tablaProductosVenta.innerHTML = "";
         const productosVenta = obtenerProductosEnVenta();
 
@@ -239,7 +244,7 @@ async function main() {
                 tr.append(tdButton);
                 tablaClientesEncontrados.append(tr);
             });
-        });
+        }).catch(err => mostrarAlerta('Ocurrio un error', 'error'));
     });
 
 
@@ -289,7 +294,7 @@ async function main() {
                         });
                     });
                 });
-            });
+            }).catch(err => mostrarAlerta('Oucrrio un error', 'error'));
         }
     });
 }
@@ -301,18 +306,18 @@ async function verificarAperturaDeCaja() {
 }
 
 async function abrirCaja(monto) {
-    const res = await (await fetch('/controller/caja/abrir.php',{
-        method:'post',
-        body: JSON.stringify({monto})
+    const res = await (await fetch('/controller/caja/abrir.php', {
+        method: 'post',
+        body: JSON.stringify({ monto })
     })).json();
 
     return res;
 }
 
 async function cerrarCaja(id, monto) {
-    const res = await (await fetch('/controller/caja/cerrar.php',{
-        method:'post',
-        body: JSON.stringify({id,monto})
+    const res = await (await fetch('/controller/caja/cerrar.php', {
+        method: 'post',
+        body: JSON.stringify({ id, monto })
     })).json();
 
     return res;
@@ -325,7 +330,7 @@ function ventaExistente() {
 }
 
 async function registarVenta(data) {
-    const res = await (await fetch("/controller/ventas/crear.php",{
+    const res = await (await fetch("/controller/ventas/crear.php", {
         body: JSON.stringify(data),
         method: 'post'
     })).json();
@@ -391,7 +396,7 @@ async function buscarProductoPorNombre($filter = "") {
     return await res.json();
 }
 
-function transformarProductoToProductoVenta(producto){
+function transformarProductoToProductoVenta(producto) {
     let productoVenta;
     const cliente = obtenerClienteVenta();
     let precio = (cliente.precio === 1) ? new Number(producto.venta) :
@@ -401,7 +406,7 @@ function transformarProductoToProductoVenta(producto){
     return productoVenta;
 }
 
-function crearProductoVenta(producto){
+function crearProductoVenta(producto) {
     const tr = crearElemento('tr');
     const tdProducto = crearElemento('td');
     const tdPrecio = crearElemento('td');
@@ -412,7 +417,7 @@ function crearProductoVenta(producto){
     const inputCantidad = crearElemento('input');
 
     boton.textContent = "Borrar";
-    boton.classList.add("btn","btn-sm","btn-danger");
+    boton.classList.add("btn", "btn-sm", "btn-danger");
     boton.addEventListener('click', () => {
         console.log('hola')
         removerProductoDeVenta(producto);
@@ -425,9 +430,9 @@ function crearProductoVenta(producto){
     inputCantidad.min = 1;
     inputCantidad.value = producto.cantidad;
 
-    inputCantidad.addEventListener('change',function(){
+    inputCantidad.addEventListener('change', function () {
         const cantidad = new Number(this.value)
-        aumentarCantidadProducto(producto,cantidad);
+        aumentarCantidadProducto(producto, cantidad);
         eventTotalProd.fire();
     });
 

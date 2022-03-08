@@ -23,11 +23,15 @@ async function main(){
         ajax:{
             'url': '/controller/ventas/listar.php',
             'data': function(d){
-                d = {
+                const {
+                    idVendedor,
+                    idCliente
+                } = {
                     ...
                     Object.fromEntries(new FormData(formFiltros))
                 };
-                d.idVendedor = ''
+                d.idVendedor = idVendedor;
+                d.idCliente = idCliente;
             }
         },
     });
