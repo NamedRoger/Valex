@@ -20,6 +20,7 @@ const CLIENTE_VENTA_KEY = "clienteVenta";
 const PRODUCTOS_VENTA_KEY = "productosVenta";
 const EVENTO_ALTER_PROD = "alter.prod";
 const INICIAR_VENTA_KEY = "ventaIniciada";
+const FONDO_KEY = "fondo";
 const eventoAltertacionProdcutos = new Event(EVENTO_ALTER_PROD);
 const eventTotalProd = new EventProductoTabla();
 
@@ -53,6 +54,10 @@ class Venta {
 
 async function main() {
     const modalAbrirCaja = document.querySelector('#abrirCaja');
+    const formAbrirCaja = document.querySelector('#formAbrirCaja');
+    const modalCerrarCaja = document.querySelector("#cerrarCaja");
+    const formCerrarCaja = document.querySelector("#formCerrarCaja");
+    const inputsCierre = document.querySelectorAll('.input-cierre');
     const tablaProductosVenta = document.querySelector("#tablaProductosVenta");
     const totalTabla = document.querySelector("#totalVentaTabla");
     const totalVentaDetalle = document.querySelector("#totalVentaDetalle");
@@ -60,6 +65,72 @@ async function main() {
     const totalVentaInfo = document.querySelector("#totalVentaInfo");
     const cambioVentaInfo = document.querySelector("#cambioVentaInfo");
     const formPagarVenta = document.querySelector("#formPagarVenta");
+
+    const {data} = await verificarAperturaDeCaja();
+    if(!data){
+        bootstrap.Modal.getOrCreateInstance(modalAbrirCaja).show();
+    }else {
+
+    }
+
+    formAbrirCaja.addEventListener('submit',function(e){
+        e.preventDefault();
+        const {monto} = Object.fromEntries(new FormData(this));
+        abrirCaja(monto).then(res => {
+            if(res.success){
+                mostrarAlerta("Se ha abierto la caja",'success');
+                bootstrap.Modal.getOrCreateInstance(modalAbrirCaja).hide();
+                setItemLocalStorage(FONDO_KEY,JSON.stringify(res.data));
+            }else{
+                mostrarAlerta(res.error,'error');
+            }
+        });
+    });
+
+    modalAbrirCaja.addEventListener('hide.bs.modal', () => {
+        formAbrirCaja.reset();
+    });
+
+    modalCerrarCaja.addEventListener('show.bs.modal', () => {
+        const fondo = JSON.parse(getItemLocalStorage(FONDO_KEY)).montoInicial;
+        document.querySelector('#fondoCaja').textContent = totalCurrency(fondo);
+        document.querySelector('#totalCierre').textContent = totalCurrency(0);
+    });
+
+    modalCerrarCaja.addEventListener('hide.bs.modal', () => {
+        formCerrarCaja.reset();
+        document.querySelector('#fondoCaja').textContent = totalCurrency(0);
+        document.querySelector('#totalCierre').textContent = totalCurrency(0);
+    });
+
+    inputsCierre.forEach(i => i.addEventListener('keyup',function(){
+        const total = totalCierreForm();
+        console.log(total)
+        document.querySelector('#totalCierre').textContent = totalCurrency(isNaN(total)?0:total);
+    }));
+
+    formCerrarCaja.addEventListener('submit', function(e){
+        e.preventDefault();
+        const {id} = JSON.parse(getItemLocalStorage(FONDO_KEY));
+        cerrarCaja(id,totalCierreForm()).then(res => {
+            if(res.success){
+                mostrarAlerta("Se ha cerrado la caja",'success');
+                bootstrap.Modal.getOrCreateInstance(modalCerrarCaja).hide();
+                removeItemLocalStorage(FONDO_KEY);
+            }else{
+                mostrarAlerta(res.error,'error');
+            }
+        });
+    });
+
+    const totalCierreForm = () => {
+        return Object.entries(Object.fromEntries(new FormData(formCerrarCaja)))
+        .map(m => {
+            const t = (m[0] == 'monedas')? parseInt(m[1]): parseInt(m[0]) * parseInt(m[1]);
+            return isNaN(t)?0:t;
+        })
+        .reduce((s,c) => s +c,0);
+    }
 
     document.querySelector("#txtPago").addEventListener("keyup",function(){
         const productosEnVenta = obtenerProductosEnVenta();
@@ -224,16 +295,27 @@ async function main() {
 }
 
 
-function verificarAperturaDeCaja() {
-
+async function verificarAperturaDeCaja() {
+    const res = await (await fetch('/controller/caja/verificar.php')).json();
+    return res;
 }
 
-function abrirCaja() {
+async function abrirCaja(monto) {
+    const res = await (await fetch('/controller/caja/abrir.php',{
+        method:'post',
+        body: JSON.stringify({monto})
+    })).json();
 
+    return res;
 }
 
-function cerrarCaja() {
+async function cerrarCaja(id, monto) {
+    const res = await (await fetch('/controller/caja/cerrar.php',{
+        method:'post',
+        body: JSON.stringify({id,monto})
+    })).json();
 
+    return res;
 }
 
 //--------------------------------- ventas

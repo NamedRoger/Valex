@@ -15,32 +15,44 @@ class Caja
     public $estatus;
     private $conexion;
 
-    public function __construct($montoInicial, $idUsuario, $idSucursal)
+    public function __construct($idUsuario, $idSucursal, $montoInicial = 0)
     {
         $this->montoInicial = $montoInicial;
         $this->idUsuario = $idUsuario;
         $this->idSucursal = $idSucursal;
-        // $this->conexion = DataBase::getInstance()->getConexion();
+        $this->conexion = DataBase::getInstance()->getConexion();
     }
 
     public function abrirCaja()
     {
-        $fechaInicio = "";
-        $abrirCajaQuery = "INSERT INTO arqueo_caja 
-        (idUsuario, idSucursal, fechaInicio, fechaFin, montoInicial,estatus)
-        VALUES ($this->idUsuario,$this->idSucursal,$fechaInicio,$this->montoInicial,0)";
-        // $this->conexion->query($abrirCajaQuery);
+        date_default_timezone_set('America/Monterrey');
+        $fechaInicio = new DateTime("now");
+        $fecha = $fechaInicio->format('Y-m-d H:i:s');
+        $abrirCajaQuery = "INSERT INTO arqueo_caja (idUsuario, idSucursal, fechaInicio, montoInicial,estatus)
+        VALUES ($this->idUsuario,$this->idSucursal,'$fecha',$this->montoInicial,1)";
+        $this->conexion->query($abrirCajaQuery);
+        $this->id = $this->conexion->insert_id;
     }
 
-    public function cerrarCaja()
+    public function cerrarCaja($monto )
     {
+        date_default_timezone_set('America/Monterrey');
+        $fechaInicio = new DateTime("now");
+        $fecha = $fechaInicio->format('Y-m-d H:i:s');
+        $abrirCajaQuery = "UPDATE arqueo_caja SET estatus = 0, fechaFin ='$fecha', montoFinal = $monto
+        WHERE id = $this->id";
+        $this->conexion->query($abrirCajaQuery);
     }
 
     public function verificarCaja()
     {
-        return new DateTime();
+        $verificarQuery = "SELECT * FROM arqueo_caja 
+        WHERE CAST(fechaInicio as date) = CAST(NOW() as date) 
+        AND estatus = 1
+        AND idSucursal = $this->idSucursal
+        LIMIT 1";
+        $result = $this->conexion->query($verificarQuery);
+        $corte = $result->fetch_object();
+        return $corte != null && $corte != false;
     }
 }
-
-$caja = new Caja(0,0,0);
-var_dump( $caja->verificarCaja());

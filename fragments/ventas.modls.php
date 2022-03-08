@@ -124,21 +124,73 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Abrir Caja</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Cerrar Caja</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="formPagarVenta">
-                    <div class="form-group ">
-                        <h4>Fondo</h4>
-                        <span id="totalVentaInfo"></span>
+                <form id="formCerrarCaja">
+                    <div class="row">
+                        <div class="col">
+                            <h4>Fondo:</h4>
+                        </div>
+                        <div class="col">
+                            <h5 id="fondoCaja">$0.00</h5>
+                        </div>
                     </div>
-                    <div class="form-group ">
-                        <h4>Monto</h4>
-                        <input type="number" class="form-control" id="txtPago" name="pagoVenta">
+                    <div class="row">
+                        <label for="" class="col">$1000</label>
+                        <div class="col">
+                            <input type="number" value="0" min="0" class="form-control input-cierre" name="1000" id="">
+                        </div>
                     </div>
-                    <div>
-                        <button type="submit" class="btn btn-success">Abrir</button>
+                    <div class="row">
+                        <label for="" class="col">$500</label>
+                        <div class="col">
+                            <input type="number" value="0" min="0" class="form-control input-cierre" name="500" id="">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label for="" class="col">$200</label>
+                        <div class="col">
+                            <input type="number" value="0" min="0" class="form-control input-cierre" name="200" id="">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label for="" class="col">$100</label>
+                        <div class="col">
+                            <input type="number" value="0" min="0" class="form-control input-cierre" name="100" id="">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label for="" class="col">$50</label>
+                        <div class="col">
+                            <input type="number" value="0" min="0" class="form-control input-cierre" name="50" id="">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label for="" class="col">$20</label>
+                        <div class="col">
+                            <input type="number" value="0" min="0" class="form-control input-cierre" name="20" id="">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label for="" class="col">Monedas</label>
+                        <div class="col">
+                            <input type="number" value="0" min="0" class="form-control input-cierre" name="monedas" id="">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h4>Total:</h4>
+                        </div>
+                        <div class="col">
+                            <h5 id="totalCierre">$0.00</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button type="submit" class="btn btn-success">Cerrar</button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -150,17 +202,17 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Cerrar Caja</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Abrir Caja</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="formPagarVenta">
+                <form id="formAbrirCaja">
                     <div class="form-group ">
                         <h4>Monto</h4>
-                        <input type="number" class="form-control" id="txtPago" name="pagoVenta">
+                        <input type="number" class="form-control" id="monto" name="monto" min="0">
                     </div>
                     <div>
-                        <button type="submit" class="btn btn-success">Cerrar</button>
+                        <button type="submit" class="btn btn-success">Abrir</button>
                     </div>
                 </form>
             </div>

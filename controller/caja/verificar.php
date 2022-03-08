@@ -8,6 +8,7 @@ include '../../clases/Stock.php';
 include '../../clases/Cliente.php';
 include '../../clases/ProductoVenta.php';
 include '../../clases/Producto.php';
+include '../../clases/Caja.php';
 
 
 include '../servicios/servicioSesion.php';
@@ -17,10 +18,10 @@ include '../servicios/servicioVenta.php';
 
 $result = [];
 try{
-    $idProducto = $_GET['idProducto'];
     $idSucursal = getSucursal();
-    
-    $result['data'] = 0;
+    $idUsuario = getIdUsuario();
+    $caja = new Caja($idUsuario, $idSucursal);
+    $result['data'] = $caja->verificarCaja();
     $result['success'] = true;
 
     echo json_encode($result);
