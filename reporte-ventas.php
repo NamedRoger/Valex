@@ -32,7 +32,28 @@
 						<div class="card">
 							<div class="card-body">
 								<h5 class="mb-4">Reporte de Ventas</h5>
-								<table class="table">
+								<div class="row mb-4">
+									<div class="col">
+										<h6>Filtros</h6>
+										<form id="formFiltros">
+											<select name="idVendedor" id="">
+												<option value=""> --- Vendedor ---</option>
+												
+											</select>
+											<select name="idCliente" id="">
+												<option value="">
+												--- Cliente ---
+												</option>
+											</select>
+											Fecha Inicio:
+											<input type="date" name="fechaInicio" id="">
+											Fecha Fin:
+											<input type="date" name="fechaInicio" id="">
+										</form>
+									</div>
+								</div>
+								<div class="row">
+								<table class="table" id="ventas">
 									<thead>
 										<tr>
 											<th>Vendedor</th>
@@ -42,14 +63,10 @@
 										</tr>
 									</thead>
 									<tbody>
-										<tr>
-											<td>Paloma</td>
-											<td>14/01/2020-13:47:44</td>
-											<td>$ 57.00</td>
-											<td><button class="btn btn-iconbtn btn-sm" onclick="ModalVenta(1)"><i class="fas fa-ticket-alt" style="color: purple;"></i></button></td>
-										</tr>
+										
 									</tbody>
 								</table>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -130,5 +147,6 @@
 				
 		</div>
 		<?php include 'fragments/js.php' ?>
+		<script src="./assets/js/reporte-ventas.js"></script>
 	</body>
 </html>

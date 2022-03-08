@@ -349,7 +349,7 @@ function registrarNuevoCliente() {
 }
 
 async function buscarCliente($nombre) {
-    let res = await fetch('controller/clientes/filtro.php?filter=' + $nombre);
+    let res = await fetch('/controller/clientes/filtro.php?filter=' + $nombre);
     return await res.json();
 }
 
@@ -387,7 +387,7 @@ function buscarProductoPorCodigo() {
 }
 
 async function buscarProductoPorNombre($filter = "") {
-    const res = await fetch('controller/productos/filtro.php?filter=' + $filter);
+    const res = await fetch('/controller/productos/filtro.php?filter=' + $filter);
     return await res.json();
 }
 
