@@ -14,12 +14,17 @@ include '../servicios/servicioVenta.php';
 
 
 try{
-    $fechaInicio = $_GET['fechaInicio'];
-    $fechaFin = $_GET['fechaFin'];
-    $vendedor = $_GET['idVendedor'];
-    $cliente = $_GET['idCliente'];
+    $fechaInicio = $_GET['fechaInicio'] ?? null;
+    $fechaFin = $_GET['fechaFin'] ?? null;
+    $vendedor = $_GET['idVendedor'] ?? null;
+    $cliente = $_GET['idCliente'] ?? null;
+    $sucursalGet = $_GET['idSucursal'] ?? null;
+
     $sucursal = getSucursal();
 
+    $rol = getRol();
+
+    $ventas = [];
     $filters = [
         "idVendedor" => $vendedor,
         "fechaInicio" => $fechaInicio,
@@ -27,8 +32,16 @@ try{
         "idCliente" => $cliente,
     ];
 
+    if($rol == 1){
+        if($sucursalGet != null){
+            $ventas = obtenerVentasPorSucursal($sucursalGet, $filters);
+        }else{
+            $ventas = obtenerVentas($filters);
+        }
+    }else {
+        $ventas =  obtenerVentasPorSucursal($sucursal, $filters);
+    }
 
-    $ventas = obtenerVentas($sucursal,$filters);
     echo json_encode($ventas);
 
 } catch(Exception $excetption){

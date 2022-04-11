@@ -29,8 +29,8 @@ try{
         if(!isset($idSucursal)){
             throw new Exception("Necesita estar registrado en alguna sucursal");
         }
-        $ventaData->idVendedor = $idUsuario;
-        $ventaData->idSucursal = $idSucursal;
+        $ventaData->idVendedor = intval($idUsuario);
+        $ventaData->idSucursal = intval($idSucursal);
 
         $idVenta = registrarVenta($ventaData, $cliente);
 
