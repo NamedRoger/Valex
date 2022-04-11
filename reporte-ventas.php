@@ -112,18 +112,18 @@ $con = 	Conexion();
 													<div class="col-md">
 														<label class="tx-gray-600">Cliente:</label>
 														<div class="billed-to">
-															<h6>Publico en General</h6>
+															<h6 id="clienteDetalle">Publico en General</h6>
 														</div>
 													</div>
 													<div class="col-md">
 														<label class="tx-gray-600">Infomacion de la nota:</label>
-														<p class="invoice-info-row"><span><small>Nota No.</small></span> <span><small>007</small></span></p>
-														<p class="invoice-info-row"><span><small>Vendedor:</small></span> <span><small>Paloma</small></span></p>
-														<p class="invoice-info-row"><span><small>Fecha y Hora:</small></span> <span><small>14/01/2020-13:47:44</small></span></p>
+														<p class="invoice-info-row"><span><small>Nota No.</small></span> <span><small id="idDetalle">007</small></span></p>
+														<p class="invoice-info-row"><span><small>Vendedor:</small></span> <span><small id="vendedorDetalle">Paloma</small></span></p>
+														<p class="invoice-info-row"><span><small>Fecha y Hora:</small></span> <span><small id="fechaDetalle">14/01/2020-13:47:44</small></span></p>
 													</div>
 												</div>
 												<div class="table-responsive mg-t-40">
-													<table class="table table-invoice border text-md-nowrap mb-0">
+													<table id="tablaProductosDetalle" class="table table-invoice border text-md-nowrap mb-0">
 														<thead>
 															<tr>
 																<th><small>Producto</small></th>
@@ -133,15 +133,10 @@ $con = 	Conexion();
 															</tr>
 														</thead>
 														<tbody>
-															<tr>
-																<td><small>Salsa Valentina </small></td>
-																<td><small>$ 19.00</small></td>
-																<td><small>3</small></td>
-																<td><small>$ 57.00</small></td>
-															</tr>
+															
 														</tbody>
 													</table>
-													<h3 class="mt-4">Total: $ 57.00</h3>
+													<h3 class="mt-4" id="totalDetalle">Total: $ 57.00</h3>
 												</div>
 												<!--  -->
 												<a href="#" class="btn btn-info float-end mt-3 ms-2">

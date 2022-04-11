@@ -2,6 +2,8 @@
 async function main(){
     const formFiltros = document.querySelector("#formFiltros");
     const tablaVentas = document.querySelector("#ventas tbody");
+    const modalDetalleVenta = document.querySelector("#ventaModal");
+    const tablaDetalle = document.querySelector("#tablaProductosDetalle tbody");
 
     const selectSucursales = document.querySelector("#idSucursal");
     const selectVenedores = document.querySelector("#idVendedor");
@@ -57,8 +59,9 @@ async function main(){
             const tdFecha = document.createElement("td");
             tdFecha.textContent = fecha;
             const tdMonto = document.createElement("td");
-            tdMonto.textContent = monto;
+            tdMonto.textContent = "$ " + monto;
             const tdButton = document.createElement("td");
+            tdButton.addEventListener("click",() => showDetalleVenta(venta))
             tdButton.innerHTML = "<button>Ver</button>";
 
             tr.append(tdVendedor, tdFecha, tdMonto, tdButton);
@@ -105,6 +108,46 @@ async function main(){
                 )
             ).json();
         return ventas;
+    }
+
+    async function showDetalleVenta(
+        {
+            idVenta, 
+            idCliente, 
+            monto, 
+            fecha, 
+            cliente,
+            vendedor
+        }){
+        const ventaProductos = await (await fetch("/controller/ventas/listar_productos?idVenta=" + idVenta)).json();
+        console.log(ventaProductos);
+        const modal = bootstrap.Modal.getOrCreateInstance(modalDetalleVenta);
+        
+        document.getElementById("totalDetalle").textContent = monto;
+        document.getElementById("vendedorDetalle").textContent = vendedor;
+        document.getElementById("fechaDetalle").textContent = fecha;
+        document.getElementById("clienteDetalle").textContent = cliente;
+        document.getElementById("idDetalle").textContent = idVenta.padStart(3,'0');
+
+        tablaDetalle.innerHTML = "";
+
+        tablaDetalle.append(...ventaProductos.map(producto => {
+            const tr = document.createElement("tr");
+            
+            const tdProducto = document.createElement("td");
+            tdProducto.textContent = producto.idProducto;
+
+            const tdPrecio = document.createElement("td");
+            tdPrecio.textContent = producto.precio;
+            const tdCantidad = document.createElement("td");
+            tdCantidad.textContent = producto.cantidad;
+            const tdTotal = document.createElement("td");
+            tdTotal.textContent = producto.total;
+
+            tr.append(tdProducto, tdPrecio, tdCantidad, tdTotal);
+            return tr;
+        }));
+        modal.show();
     }
 }
 
