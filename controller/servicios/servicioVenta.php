@@ -97,7 +97,8 @@ function obtenerVenta($idVenta){
 function obtenerProductosVenta($idVenta){
     $conexion =  DataBase::getInstance()->getConexion();
 
-    $query = "SELECT * FROM venta_productos AS vp WHERE vp.idVenta = '$idVenta'";
+    $query = "SELECT vp.*,p.nombre FROM venta_productos AS vp 
+    INNER JOIN productos AS p ON p.idProducto = vp.idProducto WHERE vp.idVenta = '$idVenta'";
     $resutl = $conexion->query($query);
     $productos = [];
     while($producto = $resutl->fetch_object()){

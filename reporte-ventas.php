@@ -39,10 +39,10 @@ $con = 	Conexion();
 									<h6>Filtros</h6>
 									<form id="formFiltros">
 										<div class="mb-3">
-											<?php if($_SESSION["rol"] == 1){ ?>
-											<select name="idSucursal" id="idSucursal">
-												<option value=""> --- Sucursal ---</option>
-											</select>
+											<?php if ($_SESSION["rol"] == 1) { ?>
+												<select name="idSucursal" id="idSucursal">
+													<option value=""> --- Sucursal ---</option>
+												</select>
 											<?php } ?>
 											<select name="idVendedor" id="idVendedor">
 												<option value=""> --- Vendedor ---</option>
@@ -67,7 +67,7 @@ $con = 	Conexion();
 								</div>
 							</div>
 							<div class="row">
-								<table class="table" id="ventas">
+								<table class="table table-bordered" id="ventas">
 									<thead>
 										<tr>
 											<th>Vendedor</th>
@@ -79,6 +79,10 @@ $con = 	Conexion();
 									<tbody>
 
 									</tbody>
+									<tfoot>
+										<th colspan="2" class="text-body">Total</th>
+										<td colspan="" id="totalReporte"></td>
+									</tfoot>
 								</table>
 							</div>
 						</div>
@@ -133,10 +137,11 @@ $con = 	Conexion();
 															</tr>
 														</thead>
 														<tbody>
-															
+
 														</tbody>
+
 													</table>
-													<h3 class="mt-4" id="totalDetalle">Total: $ 57.00</h3>
+													<h3 class="mt-4">Total:<span id="totalDetalle"></span></h3>
 												</div>
 												<!--  -->
 												<a href="#" class="btn btn-info float-end mt-3 ms-2">

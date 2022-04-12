@@ -4,6 +4,7 @@ async function main(){
     const tablaVentas = document.querySelector("#ventas tbody");
     const modalDetalleVenta = document.querySelector("#ventaModal");
     const tablaDetalle = document.querySelector("#tablaProductosDetalle tbody");
+    const totalReporte = document.querySelector("#totalReporte");
 
     const selectSucursales = document.querySelector("#idSucursal");
     const selectVenedores = document.querySelector("#idVendedor");
@@ -27,6 +28,7 @@ async function main(){
         getVentas(data).then(res => {
             ventas = res;
             loadTable();
+            totalReporte.textContent = totalCurrency(calcularTotalReporte());
         });
         
     });
@@ -59,7 +61,7 @@ async function main(){
             const tdFecha = document.createElement("td");
             tdFecha.textContent = fecha;
             const tdMonto = document.createElement("td");
-            tdMonto.textContent = "$ " + monto;
+            tdMonto.textContent = totalCurrency(monto);
             const tdButton = document.createElement("td");
             tdButton.addEventListener("click",() => showDetalleVenta(venta))
             tdButton.innerHTML = "<button>Ver</button>";
@@ -102,11 +104,12 @@ async function main(){
     }
 
     async function getVentas({idSucursal, idVendedor, idCliente, fechaInicio, fechaFin}){
-        const ventas = await (
+        let ventas = await (
             await fetch(
                 `/controller/ventas/listar.php?idSucursal=${idSucursal}&idVendedor=${idVendedor}&idCliente=${idCliente}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`
                 )
             ).json();
+        ventas = ventas.map(venta => ({...venta, monto: parseFloat(venta.monto)}));
         return ventas;
     }
 
@@ -120,10 +123,9 @@ async function main(){
             vendedor
         }){
         const ventaProductos = await (await fetch("/controller/ventas/listar_productos?idVenta=" + idVenta)).json();
-        console.log(ventaProductos);
         const modal = bootstrap.Modal.getOrCreateInstance(modalDetalleVenta);
         
-        document.getElementById("totalDetalle").textContent = monto;
+        document.getElementById("totalDetalle").textContent = totalCurrency(monto);
         document.getElementById("vendedorDetalle").textContent = vendedor;
         document.getElementById("fechaDetalle").textContent = fecha;
         document.getElementById("clienteDetalle").textContent = cliente;
@@ -135,19 +137,24 @@ async function main(){
             const tr = document.createElement("tr");
             
             const tdProducto = document.createElement("td");
-            tdProducto.textContent = producto.idProducto;
+            tdProducto.textContent = producto.nombre;
 
             const tdPrecio = document.createElement("td");
-            tdPrecio.textContent = producto.precio;
+            tdPrecio.textContent = totalCurrency(producto.precio);
             const tdCantidad = document.createElement("td");
             tdCantidad.textContent = producto.cantidad;
             const tdTotal = document.createElement("td");
-            tdTotal.textContent = producto.total;
+            tdTotal.textContent = totalCurrency(producto.total);
 
             tr.append(tdProducto, tdPrecio, tdCantidad, tdTotal);
             return tr;
         }));
         modal.show();
+    }
+
+    function calcularTotalReporte(){
+        const totalReporte = ventas.reduce((suma, venta) => suma += venta.monto,0);
+        return totalReporte;
     }
 }
 
@@ -165,3 +172,5 @@ async function loadClientes(){
     const res = await (await fetch("/controller/clientes/filtro.php?filter=")).json();
     return res.data;
 }
+
+const totalCurrency = (total) => new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(total);
