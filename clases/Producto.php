@@ -12,6 +12,7 @@ class Producto
     public $venta;
     public $medio;
     public $mayoreo;
+    private $conextion;
 
     public function __construct(
         $codigo, 
@@ -25,12 +26,13 @@ class Producto
     {
         $this->codigo = $codigo;
         $this->idCategoria = $idCategoria;
-        $this->medida = $medida;
+        $this->medida = intval($medida);
         $this->nombre = $nombre;
-        $this->compra = $compra;
-        $this->venta = $venta;
-        $this->medio = $medio;
+        $this->compra = floatval($compra);
+        $this->venta = floatval($venta);
+        $this->medio = floatval($medio);
         $this->mayoreo = $mayoreo;
+        $this->conextion = DataBase::getInstance()->getConexion();
     }
 
     public function obtenerPrecioCliente($cliente)
@@ -48,6 +50,26 @@ class Producto
                 break;
         }
         return $precio;
+    }
+
+    public static function obtenerProducto($idProducto)
+    {
+        $conextion = DataBase::getInstance()->getConexion();
+        $query = "SELECT * FROM productos WHERE idProducto = $idProducto";
+        $result = $conextion->query($query);
+        $productoDb = $result->fetch_object();
+        $producto = new Producto(
+            $productoDb->codigo,
+            $productoDb->idCategoria,
+            $productoDb->medida,
+            $productoDb->nombre,
+            $productoDb->compra,
+            $productoDb->venta,
+            $productoDb->medio,
+            $productoDb->mayoreo
+        );
+
+        return $producto;
     }
 
 

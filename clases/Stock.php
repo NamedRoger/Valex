@@ -3,7 +3,7 @@
 namespace Valex\Clases;
 
 use Exception;
-
+use Valex\Clases\Producto;
 class Stock
 {
     public $idSucursal;
@@ -31,20 +31,29 @@ class Stock
 
     public function reducirProducto($idProducto, $cantidad)
     {
-
-        $producto = $this->obtenerProducto($idProducto);
-        $cantidadEnStock = floatval($producto->stock);
+        $productoStock = $this->obtenerProducto($idProducto);
+        $producto = Producto::obtenerProducto($idProducto);
+        $cantidadEnStock = floatval($productoStock->stock);
+        if($producto->medida == 1)
+        {
+            $cantidad = $cantidad * 1000;
+        }
         $cantidadEnStock -= $cantidad;
-        $this->actualizarCantidadProducto($producto->idStock, $cantidadEnStock);
+        $this->actualizarCantidadProducto($productoStock->idStock, $cantidadEnStock);
     }
 
     public function aumentarProducto($idProducto, $cantidad)
     {
-        $producto = $this->obtenerProducto($idProducto);
-        $cantidadEnStock = floatval($producto->stock);
-        $cantidad += $cantidadEnStock;
+        $productoStock = $this->obtenerProducto($idProducto);
+        $producto = Producto::obtenerProducto($idProducto);
+        $cantidadEnStock = floatval($productoStock->stock);
 
-        $this->actualizarCantidadProducto($producto->idStock, $cantidad);
+        if($producto->medida == 1)
+        {
+            $cantidad = $cantidad * 1000;
+        }
+        $cantidad += $cantidadEnStock;
+        $this->actualizarCantidadProducto($productoStock->idStock, $cantidad);
     }
 
     private function actualizarCantidadProducto($idProducto, $cantidad)

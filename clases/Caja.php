@@ -28,9 +28,10 @@ class Caja
         date_default_timezone_set('America/Monterrey');
         $fechaInicio = new DateTime("now");
         $fecha = $fechaInicio->format('Y-m-d H:i:s');
+        $this->fechaInicio = $fecha;
         $abrirCajaQuery = "INSERT INTO arqueo_caja (idUsuario, idSucursal, fechaInicio, montoInicial,estatus)
         VALUES ($this->idUsuario,$this->idSucursal,'$fecha',$this->montoInicial,1)";
-        $this->conexion->query($abrirCajaQuery);
+        $result = $this->conexion->query($abrirCajaQuery);
         $this->id = $this->conexion->insert_id;
     }
 

@@ -34,10 +34,6 @@ try{
 
         $idVenta = registrarVenta($ventaData, $cliente);
 
-        if($idVenta == null){
-            throw new Exception("Ocurrió un problema para registrar la venta");
-        }
-
         $result = [
             "success" => true,
             "data" => $idVenta

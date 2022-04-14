@@ -110,7 +110,8 @@ function obtenerProductosVenta($idVenta){
 
 function registrarVenta($ventaData, $cliente)
 {
-    $stock = new Stock($ventaData->idSucursal);
+    $conexion =  DataBase::getInstance()->getConexion();
+        $stock = new Stock($ventaData->idSucursal);
 
     $productosVenta = [];
     foreach($ventaData->productos as $productoInfo){
@@ -127,6 +128,10 @@ function registrarVenta($ventaData, $cliente)
     $venta->calcularTotal();
 
     $venta->registrarVenta();
+
+    if($venta->idVenta == null) {
+        throw new Exception("Ocurrió un error al registrar la venta");
+    }
 
     $venta->pagar($ventaData->pago);
 
