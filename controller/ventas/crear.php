@@ -20,7 +20,7 @@ try{
     if(isset($ventaData)){
         $cliente = getClienteById($ventaData->idCliente);
         if($cliente == null) {
-            throw new Exception("No existe el cliente");
+            $cliente = getClientBase();
         }
 
         $idSucursal = getSucursal();
