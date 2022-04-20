@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 namespace Valex\Clases;
 
 class DataBase
@@ -16,9 +17,11 @@ class DataBase
 	private function __construct()
 	{
 		$this->conexion = $this->createConexion();
+		$this->seedInitData();
 	}
 
-	public function getConexion(){
+	public function getConexion()
+	{
 		return $this->conexion;
 	}
 
@@ -40,5 +43,19 @@ class DataBase
 		}
 
 		return $con;
+	}
+
+	private function seedInitData()
+	{
+		$clientName = "Cliente Default";
+		$foundClientBaseQuery = "SELECT * FROM clientes WHERE nombre = '$clientName'";
+		$foundClientResult = $this->conexion->query($foundClientBaseQuery);
+		if ($foundClientResult) {
+			$foundClient = $foundClientResult->fetch_object();
+			if (!$foundClient) {
+				$clientBaseInsertQuery = "INSERT INTO clientes (nombre, precio) VALUES ('$clientName', 1)";
+				$this->conexion->query($clientBaseInsertQuery);
+			}
+		}
 	}
 }
