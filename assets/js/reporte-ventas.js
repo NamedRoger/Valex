@@ -63,8 +63,17 @@ async function main(){
             const tdMonto = document.createElement("td");
             tdMonto.textContent = totalCurrency(monto);
             const tdButton = document.createElement("td");
-            tdButton.addEventListener("click",() => showDetalleVenta(venta))
-            tdButton.innerHTML = "<button>Ver</button>";
+            
+            const buttonVer = document.createElement("button");
+            const buttonBorrar = document.createElement("button");
+
+            buttonVer.addEventListener("click",() => showDetalleVenta(venta))
+            buttonVer.innerHTML = "Ver";
+
+            buttonBorrar.addEventListener("click",() => {})
+            buttonBorrar.innerHTML = "Borrar";
+
+            tdButton.append(buttonVer, buttonBorrar);
 
             tr.append(tdVendedor, tdFecha, tdMonto, tdButton);
             return tr;
