@@ -1,17 +1,16 @@
-<? 
-use Valex\Persistence\DataBase;
+<?php
+use Valex\Clases\DataBase;
 
-function abrirCaja($cantidad){
+function listarArqueos() {
+    $conexion = DataBase::getInstance()->getConexion();
+    $queryArqueo = "SELECT * FROM arqueo_caja AS ac INNER JOIN sucursales AS s ON s.idSucursal = ac.idSucursal";
+    
+    $result = $conexion->query($queryArqueo);
+    $arqueos = [];
 
-}
+    while($arqueo = $result->fetch_object()){
+        $arqueos[] = $arqueo;
+    }
 
-function cerrarCaja(){
-}
-
-function retirarDeCaja(){
-
-}
-
-function agregarACaja(){
-
+    return $arqueos;
 }
