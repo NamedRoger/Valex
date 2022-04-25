@@ -14,7 +14,7 @@ class Venta
     public $pago;
     public $cambio;
 
-    public function __construct($idSucursal, $cliente, $idVendedor, $proudctos = [])
+    public function __construct($idSucursal, $cliente, $idVendedor, $pago, $proudctos = [])
     {
         $this->idSucursal = $idSucursal;
         $this->cliente = $cliente;
@@ -22,13 +22,15 @@ class Venta
         $this->proudctos = $proudctos;
         $this->total = 0.00;
         $this->conexion = DataBase::getInstance()->getConexion();
+        $this->pago = $pago;
     }
 
     public function registrarVenta()
     {
         $idCliente = $this->cliente->idCliente;
-        $registrarVentaQuery = "INSERT INTO ventas (idVendedor, idCliente, idSucursal, monto)
-        VALUES ($this->idVendedor,$idCliente,$this->idSucursal, $this->total)";
+        $registrarVentaQuery = "INSERT INTO 
+                                ventas (idVendedor, idCliente, idSucursal, monto, pago, cambio)
+                                VALUES ($this->idVendedor,$idCliente,$this->idSucursal, $this->total, $this->pago, $this->cambio)";
         $this->conexion->query($registrarVentaQuery);
         $this->idVenta = $this->conexion->insert_id;
     }
@@ -54,7 +56,7 @@ class Venta
         while ($producto = $resutl->fetch_object()) {
             $productos[] = new ProductoVenta(
                 $producto->idProducto,
-                $producto->cantidad, 
+                $producto->cantidad,
                 $producto->precio,
                 $producto->medida
             );
@@ -69,10 +71,16 @@ class Venta
         }
     }
 
-    public function pagar($monto){
+    public function calcularCambio()
+    {
+        $this->cambio = $this->pago - $this->total;
+    }
+
+    public function pagar($monto)
+    {
         $cambio = $monto - $this->total;
         $registrarPagoQuery = "UPDATE ventas SET pago = $monto, cambio = $cambio WHERE idVenta = $this->idVenta";
         $this->conexion->query($registrarPagoQuery);
-        return $cambio; 
+        return $cambio;
     }
 }

@@ -168,7 +168,6 @@ async function main() {
         const total = productosEnVenta.reduce((sum, producto) => sum + (producto.precio * producto.cantidad), 0);
         totalVentaInfo.textContent = totalCurrency(total);
         cambioVentaInfo.textContent = totalCurrency(0);
-        document.querySelector('#txtPago').min = total;
         document.querySelector('#txtPago').focus();
     });
 

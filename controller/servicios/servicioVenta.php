@@ -124,10 +124,10 @@ function obtenerProductosVenta($idVenta)
 
 function registrarVenta($ventaData, $cliente)
 {
-    $conexion =  DataBase::getInstance()->getConexion();
     $stock = new Stock($ventaData->idSucursal);
 
     $productosVenta = [];
+
     foreach ($ventaData->productos as $productoInfo) {
         $producto = getProductoById($productoInfo->idProducto);
         $productosVenta[] = new ProductoVenta(
@@ -139,9 +139,9 @@ function registrarVenta($ventaData, $cliente)
     }
 
 
-    $venta = new Venta($ventaData->idSucursal, $cliente, $ventaData->idVendedor, $productosVenta);
+    $venta = new Venta($ventaData->idSucursal, $cliente, $ventaData->idVendedor, $ventaData->pago, $productosVenta);
     $venta->calcularTotal();
-
+    $venta->calcularCambio();
     $venta->registrarVenta();
 
     if ($venta->idVenta == null) {
@@ -161,6 +161,5 @@ function registrarVenta($ventaData, $cliente)
             throw new Exception("No se puede registrar el producto $producto->idProducto");
         }
     }
-
     return $venta->idVenta;
 }
