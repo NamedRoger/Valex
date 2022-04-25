@@ -106,8 +106,8 @@ $con = 	Conexion();
 												<div class="invoice-header">
 													<h1 class="invoice-title">Nota</h1>
 													<div class="billed-from">
-														<h6>Lazaro cardenas # 100</h6>
-														<!--<p><br>
+														<h6 id="ventaDireccion">Lazaro cardenas # 100</h6>
+														<!--<p><br>s
 													<br>
 													</p>-->
 													</div><!-- billed-from -->

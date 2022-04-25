@@ -120,8 +120,9 @@ async function main(){
             monto, 
             fecha, 
             cliente,
-            vendedor
-        }){
+            vendedor,
+            direccion
+        }) {
         const ventaProductos = await (await fetch("/controller/ventas/listar_productos?idVenta=" + idVenta)).json();
         const modal = bootstrap.Modal.getOrCreateInstance(modalDetalleVenta);
         
@@ -130,6 +131,7 @@ async function main(){
         document.getElementById("fechaDetalle").textContent = fecha;
         document.getElementById("clienteDetalle").textContent = cliente;
         document.getElementById("idDetalle").textContent = idVenta.padStart(3,'0');
+        document.getElementById("ventaDireccion").textContent = direccion;
 
         tablaDetalle.innerHTML = "";
 
