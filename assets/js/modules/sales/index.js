@@ -35,7 +35,9 @@ var SaleBreadcrum = () => {
     className: "pe-1 mb-xl-0"
   }, /* @__PURE__ */ React.createElement("button", {
     type: "button",
-    className: "btn btn-info me-2 btn-b"
+    className: "btn btn-info me-2 btn-b",
+    "data-bs-toggle": "modal",
+    "data-bs-target": "#nuevoCliente"
   }, /* @__PURE__ */ React.createElement("i", {
     className: "bi bi-person-plus"
   }))), /* @__PURE__ */ React.createElement("div", {
@@ -50,17 +52,11 @@ var SaleBreadcrum = () => {
   }, /* @__PURE__ */ React.createElement("div", {
     className: "btn-group dropdown"
   }, /* @__PURE__ */ React.createElement("span", {
-    className: "btn btn-warning",
-    "data-bs-toggle": "dropdown",
-    "aria-haspopup": "true",
-    "aria-expanded": "false"
+    className: "btn btn-warning"
   }, "Caja"), /* @__PURE__ */ React.createElement("button", {
     type: "button",
     className: "btn btn-warning dropdown-toggle dropdown-toggle-split",
-    id: "dropdownMenuDate",
-    "data-bs-toggle": "dropdown",
-    "aria-haspopup": "true",
-    "aria-expanded": "false"
+    id: "dropdownMenuDate"
   }, /* @__PURE__ */ React.createElement("span", {
     className: "sr-only"
   }, "Toggle Dropdown")), /* @__PURE__ */ React.createElement("div", {
@@ -129,6 +125,14 @@ var Sales = () => {
   const [products, setProducts] = React4.useState([]);
   const [customer, setCustomer] = React4.useState(null);
   const [totalSale, setTotalSale] = React4.useState(0);
+  const addCustomerToSale = () => {
+  };
+  const cancelSale = () => {
+  };
+  const closeSale = () => {
+  };
+  const addProduct = () => {
+  };
   return /* @__PURE__ */ React4.createElement(React4.Fragment, null, /* @__PURE__ */ React4.createElement(breadcrum_default, null), /* @__PURE__ */ React4.createElement("div", {
     className: "row"
   }, /* @__PURE__ */ React4.createElement("div", {

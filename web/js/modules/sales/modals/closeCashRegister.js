@@ -4,4 +4,4 @@ const AddCustomerModal = () => {
 
 };
 
-export default AddCustomerModal;
+export default AddCustomerModal;    
