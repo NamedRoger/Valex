@@ -22,11 +22,10 @@ try{
     $sucursales = [];
 
     $result = $conexion->query($query);
-    while($sucursal = $result->fetch_object()){
-        $sucursales[] = $sucursal;
-    }
+  
+    $response = $result->fetchAll(PDO::FETCH_CLASS);
 
-    echo json_encode($sucursales);
+    echo json_encode( $response);
 
 } catch(Exception $excetption){
     echo json_encode($excetption->getMessage());

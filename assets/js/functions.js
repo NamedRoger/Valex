@@ -30,44 +30,48 @@ function Login(){
         type:'post',
         data:{usuario, password},
         success:function(response){
-        	switch(response){
-        		case '1':
+            const { success, session} = JSON.parse(response);
+            console.log(success);
+        	switch(success){
+
+        		case 1:
 					title = 'Error:';
         			msg = 'Debe de ingresar su usuario';
         			Error(msg, title);
         		break;
-        		case '2':
+        		case 2:
         			title = 'Error:';
         			msg = 'Debe de ingresar su contraseña';
         			Error(msg, title);
         		break;
-        		case '3':
+        		case 3:
         			title = 'Error:';
         			msg = 'Caracteres no validos en el campo "Usuario"';
         			Error(msg, title);
         		break;
-        		case '4':
+        		case 4:
         			title = 'Error:';
         			msg = 'Caracteres no validos en el campo "Contraseña"';
         			Error(msg, title);
         		break;
-        		case '5':
+        		case 5:
         			title = 'Error:';
         			msg = 'Usuario incorrecto';
         			Error(msg, title);
         		break;
-        		case '6':
+        		case 6:
         			title = 'Error:';
         			msg = 'Contraseña incorrecta';
         			Error(msg, title);
         		break;
-        		case '7':
+        		case 7:
         			title = 'Error:';
         			msg = 'Accesos incorrectos';
         			Error(msg, title);
         		break;
-        		case '8':
-        			 window.location.href = "ventas";
+        		case 8:
+                    document.cookie = "session="+JSON.stringify(session);
+        			window.location.href = "ventas";
         		break;
         	}
         }

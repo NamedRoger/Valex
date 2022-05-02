@@ -7,7 +7,7 @@ function getClienteById($idCliente)
 {
     $conexion =  DataBase::getInstance()->getConexion();
     $query = "SELECT * FROM clientes WHERE idCliente = '$idCliente'";
-    $result =  $conexion->query($query)->fetch_object();
+    $result =  $conexion->query($query)->fetchObject();
     $cliente = new Cliente($result->idCliente, $result->nombre, $result->precio);
     return $cliente;
 }
@@ -18,7 +18,7 @@ function getClientBase()
     $clientName = "Cliente Default";
     $foundClientBaseQuery = "SELECT * FROM clientes WHERE nombre = '$clientName'";
     $foundClientResult = $conexion->query($foundClientBaseQuery);
-    return $foundClientResult->fetch_object();
+    return $foundClientResult->fetchObject();
 }
 
 function getClientes($filter = null)
@@ -34,12 +34,6 @@ function getClientes($filter = null)
     $query .= "LIMIT 15";
 
     $result = $conexion->query($query);
-    while ($clienteResult = $result->fetch_object()) {
-        $clientes[] = new Cliente(
-            $clienteResult->idCliente,
-            $clienteResult->nombre,
-            $clienteResult->precio
-        );
-    }
+    $clientes = $result->fetchAll(PDO::FETCH_CLASS);
     return $clientes;
 }

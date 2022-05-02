@@ -23,11 +23,9 @@ try{
     $vendedores = [];
 
     $result = $conexion->query($query);
-    while($vendedor = $result->fetch_object()){
-        $vendedores[] = $vendedor;
-    }
+    
 
-    echo json_encode($vendedores);
+    echo json_encode($result->fetchAll(PDO::FETCH_CLASS));
 
 } catch(Exception $excetption){
     echo json_encode($excetption->getMessage());

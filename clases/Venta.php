@@ -2,6 +2,8 @@
 
 namespace Valex\Clases;
 
+use Exception;
+
 class Venta
 {
     public $idVenta;
@@ -27,12 +29,23 @@ class Venta
 
     public function registrarVenta()
     {
-        $idCliente = $this->cliente->idCliente;
-        $registrarVentaQuery = "INSERT INTO 
+        $this->conexion->beginTransaction();
+        try {
+            $idCliente = $this->cliente->idCliente;
+            $registrarVentaQuery = "INSERT INTO 
                                 ventas (idVendedor, idCliente, idSucursal, monto, pago, cambio)
                                 VALUES ($this->idVendedor,$idCliente,$this->idSucursal, $this->total, $this->pago, $this->cambio)";
-        $this->conexion->query($registrarVentaQuery);
-        $this->idVenta = $this->conexion->insert_id;
+            $this->conexion->exec($registrarVentaQuery);
+            $this->idVenta = $this->conexion->lastInsertId();
+
+            foreach ($this->proudctos as $producto) {
+                $this->registrarProducto($producto);
+            }
+
+            $this->conexion->commit();
+        } catch (Exception $e) {
+            $this->conexion->rollBack();
+        }
     }
 
     public function registrarProducto($producto)
@@ -45,7 +58,7 @@ class Venta
         $producto->medida,
         $producto->total)";
 
-        $this->conexion->query($registrarProductoQuery);
+        $this->conexion->exec($registrarProductoQuery);
     }
 
     public function obtenerProductos()
@@ -53,7 +66,7 @@ class Venta
         $query = "SELECT * FROM venta_productos AS vp WHERE vp.idVenta = $this->idVenta";
         $resutl = $this->conexion->query($query);
         $productos = [];
-        while ($producto = $resutl->fetch_object()) {
+        while ($producto = $resutl->fetchObject()) {
             $productos[] = new ProductoVenta(
                 $producto->idProducto,
                 $producto->cantidad,
@@ -80,7 +93,12 @@ class Venta
     {
         $cambio = $monto - $this->total;
         $registrarPagoQuery = "UPDATE ventas SET pago = $monto, cambio = $cambio WHERE idVenta = $this->idVenta";
-        $this->conexion->query($registrarPagoQuery);
+        $this->conexion->exec($registrarPagoQuery);
         return $cambio;
+    }
+
+    public function agregarProducto($producto)
+    {
+        $this->proudctos[] = $producto;
     }
 }

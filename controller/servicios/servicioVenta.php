@@ -38,7 +38,7 @@ function obtenerVentas($filters = null)
 
     $result = $conexion->query($query);
     $ventas = [];
-    while ($venta = $result->fetch_object())
+    while ($venta = $result->fetchObject())
         $ventas[] = $venta;
 
     return $ventas;
@@ -78,7 +78,7 @@ function obtenerVentasPorSucursal($idSucursal, $filters = null)
 
     $result = $conexion->query($query);
     $ventas = [];
-    while ($venta = $result->fetch_object())
+    while ($venta = $result->fetchObject())
         $ventas[] = $venta;
 
     return $ventas;
@@ -104,7 +104,7 @@ function obtenerVenta($idVenta)
 
     $result = $conexion->query($query);
 
-    return $result->fetch_object();
+    return $result->fetchObject();
 }
 
 function obtenerProductosVenta($idVenta)
@@ -115,7 +115,7 @@ function obtenerProductosVenta($idVenta)
     INNER JOIN productos AS p ON p.idProducto = vp.idProducto WHERE vp.idVenta = '$idVenta'";
     $resutl = $conexion->query($query);
     $productos = [];
-    while ($producto = $resutl->fetch_object()) {
+    while ($producto = $resutl->fetchObject()) {
         $productos[] = $producto;
     }
     return $productos;
@@ -150,16 +150,16 @@ function registrarVenta($ventaData, $cliente)
 
     $venta->pagar($ventaData->pago);
 
-    foreach ($venta->proudctos as $producto) {
-        if (
-            $stock->validarExistenciaDeProducto($producto->idProducto)
-            && ($stock->obtenerCantidadProducto($producto->idProducto) - $producto->cantidad >= 0)
-        ) {
-            $venta->registrarProducto($producto);
-            $stock->reducirProducto($producto->idProducto, $producto->cantidad);
-        } else {
-            throw new Exception("No se puede registrar el producto $producto->idProducto");
-        }
-    }
+    // foreach ($venta->proudctos as $producto) {
+    //     if (
+    //         $stock->validarExistenciaDeProducto($producto->idProducto)
+    //         && ($stock->obtenerCantidadProducto($producto->idProducto) - $producto->cantidad >= 0)
+    //     ) {
+    //         $venta->registrarProducto($producto);
+    //         $stock->reducirProducto($producto->idProducto, $producto->cantidad);
+    //     } else {
+    //         throw new Exception("No se puede registrar el producto $producto->idProducto");
+    //     }
+    // }
     return $venta->idVenta;
 }

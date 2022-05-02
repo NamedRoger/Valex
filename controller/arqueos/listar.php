@@ -13,5 +13,6 @@ include '../servicios/servicioCliente.php';
 include '../servicios/servicioVenta.php';
 include '../servicios/servicioCaja.php';
 
-$arqueos = listarArqueos();
+$idSucursal = $_GET["idSucursal"];
+$arqueos = listarArqueos($idSucursal);
 echo json_encode($arqueos);

@@ -6,32 +6,36 @@
 	$usuario = trim(mysqli_escape_string($con, $_POST['usuario']));
 	$password = sha1(trim(mysqli_escape_string($con, $_POST['password'])));
 
+	$response = [
+
+	];
+
 	if (empty($usuario)) {
-		echo 1;
+		$response["success"] = 1;
 	}else{
 		if (empty($password)) {
-			echo 2;
+			$response["success"] = 2;
 		}else{
 			if (!preg_match ('/^[a-zA-Z0-9 ñÑ]+$/', $usuario)) {
-				echo 3;
+				$response["success"] = 3;
 			}else{
 				if (!preg_match ('/^[a-zA-Z0-9 áéíóúÁÉÍÓÚñÑ]+$/', $password)) {
-					echo 4;
+					$response["success"] = 4;
 				}else{
 					$consulta = $con->query("SELECT usuario FROM users WHERE usuario = '$usuario'");
 					$num_row = $consulta->num_rows;
 					if ($num_row != 1) {
-						echo 5;
+						$response["success"] = 5;
 					}else{
 						$consulta = $con->query("SELECT password FROM users WHERE password = '$password'");
 						$num_row = $consulta->num_rows;
 						if ($num_row != 1) {
-							echo 6;
+							$response["success"] = 6;
 						}else{
 							$consulta = $con->query("SELECT idUsuario, rol, idSucursal, nombre, genero FROM users WHERE password = '$password' AND usuario = '$usuario'");
 							$num_row = $consulta->num_rows;
 							if ($num_row != 1) {
-								echo 7;
+								$response["success"] = 7;
 							}else{
 								date_default_timezone_set('America/Mexico_City');
 								$fecha = date('Y-m-d');
@@ -50,7 +54,8 @@
 								$_SESSION['nombre'] = $row['nombre'];
 								$_SESSION['genero'] = $row['genero'];
 								$con->close();
-								echo 8;
+								$response["success"] = 8;
+								$response["session"] = $_SESSION;
 							}
 						}
 					}
@@ -58,6 +63,8 @@
 			}
 		}
 	}
+
+	echo json_encode($response);
 
 
 

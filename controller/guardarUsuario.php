@@ -66,7 +66,7 @@
 														if ($genero == 0) {
 															echo 13;
 														}else{
-															$insertar = $con->query("INSERT INTO users (genero, nombre, telefono, direccion, usuario, password,rol, idSucursal) VALUES ('$genero', '$nombre', '$telefono', '$direccion', '$usuario', '$password', '$rol', '$idSucursal')");
+															$insertar = $con->query("INSERT INTO users (genero, nombre, telefono, direccion, usuario, password,rol, idSucursal, permiso) VALUES ('$genero', '$nombre', '$telefono', '$direccion', '$usuario', '$password', '$rol', '$idSucursal', 0)");
 															if(!$insertar){
 																printf("Error en ejecución contacte con soporte: %s\n", $con->error);
 																exit;

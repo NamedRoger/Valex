@@ -1,16 +1,13 @@
 <?php
 use Valex\Clases\DataBase;
 
-function listarArqueos() {
+function listarArqueos($idSucursal) {
     $conexion = DataBase::getInstance()->getConexion();
-    $queryArqueo = "SELECT * FROM arqueo_caja AS ac INNER JOIN sucursales AS s ON s.idSucursal = ac.idSucursal";
+    $queryArqueo = "SELECT * FROM arqueo_caja AS ac INNER JOIN sucursales AS s ON s.idSucursal = ac.idSucursal WHERE s.idSucursal = $idSucursal";
     
     $result = $conexion->query($queryArqueo);
     $arqueos = [];
 
-    while($arqueo = $result->fetch_object()){
-        $arqueos[] = $arqueo;
-    }
-
+    $arqueos = $result->fetchAll(PDO::FETCH_CLASS);
     return $arqueos;
 }

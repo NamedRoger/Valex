@@ -30,64 +30,7 @@ $con = 	Conexion();
 			<br><br><br><br>
 			<!-- container -->
 			<div class="container-fluid">
-				<div class="row">
-					<div class="card">
-						<div class="card-body">
-							<h5 class="mb-4">Reporte de Ventas</h5>
-							<div class="row mb-4">
-								<div class="col">
-									<h6>Filtros</h6>
-									<form id="formFiltros">
-										<div class="mb-3">
-											<?php if ($_SESSION["rol"] == 1) { ?>
-												<select name="idSucursal" id="idSucursal">
-													<option value=""> --- Sucursal ---</option>
-												</select>
-											<?php } ?>
-											<select name="idVendedor" id="idVendedor">
-												<option value=""> --- Vendedor ---</option>
-											</select>
-											<select name="idCliente" id="idCliente">
-												<option value="">
-													--- Cliente ---
-												</option>
-											</select>
-											Fecha Inicio:
-											<input type="date" name="fechaInicio" id="">
-											Fecha Fin:
-											<input type="date" name="fechaFin" id="">
-										</div>
-
-										<div>
-											<button type="submit" class="btn btn-primary">
-												Buscar
-											</button>
-										</div>
-									</form>
-								</div>
-							</div>
-							<div class="row">
-								<table class="table table-bordered" id="ventas">
-									<thead>
-										<tr>
-											<th>Vendedor</th>
-											<th>Fecha/Hora</th>
-											<th>Monto</th>
-											<th>Ver venta</th>
-										</tr>
-									</thead>
-									<tbody>
-
-									</tbody>
-									<tfoot>
-										<th colspan="2" class="text-body">Total</th>
-										<td colspan="" id="totalReporte"></td>
-									</tfoot>
-								</table>
-							</div>
-						</div>
-					</div>
-				</div>
+				<div id="divContainer"></div>
 			</div>
 			<!-- container -->
 			<div class="modal fade" id="ventaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -161,7 +104,7 @@ $con = 	Conexion();
 
 	</div>
 	<?php include 'fragments/js.php' ?>
-	<script src="./assets/js/reporte-ventas.js"></script>
+	<script type="module" src="./assets/js/modules/report-sales/index.js"></script>
 </body>
 
 </html>

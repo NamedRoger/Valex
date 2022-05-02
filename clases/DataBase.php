@@ -2,6 +2,8 @@
 
 namespace Valex\Clases;
 
+use PDO;
+
 class DataBase
 {
 	private static $instance;
@@ -32,16 +34,11 @@ class DataBase
 		$username = "root";
 		$password = "";
 		// Create connection
-		$con = mysqli_connect($servername, $username, $password, $database);
+		$con = new PDO("mysql:host=localhost;dbname=valex",$username,$password, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8") );
 		// Check connection
 		if (!$con) {
 			die("Connection failed: " . mysqli_connect_error());
 		}
-		if (!$con->set_charset("utf8")) {
-			printf("Error al cargar el conjunto de caracteres utf8: %s\n", $con->error);
-			exit();
-		}
-
 		return $con;
 	}
 
@@ -51,7 +48,7 @@ class DataBase
 		$foundClientBaseQuery = "SELECT * FROM clientes WHERE nombre = '$clientName'";
 		$foundClientResult = $this->conexion->query($foundClientBaseQuery);
 		if ($foundClientResult) {
-			$foundClient = $foundClientResult->fetch_object();
+			$foundClient = $foundClientResult->fetchObject();
 			if (!$foundClient) {
 				$clientBaseInsertQuery = "INSERT INTO clientes (nombre, precio) VALUES ('$clientName', 1)";
 				$this->conexion->query($clientBaseInsertQuery);
