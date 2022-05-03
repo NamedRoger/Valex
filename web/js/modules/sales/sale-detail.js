@@ -1,7 +1,7 @@
 import * as React from "react";
 import { totalCurrency } from "../../utils/functions";
 
-const SaleDetail = ({ customer, total }) => {
+const SaleDetail = ({ customer, total, onCancelSale, onCloseSale }) => {
     return (
         <>
             <div className="col-4">
@@ -11,7 +11,7 @@ const SaleDetail = ({ customer, total }) => {
                             <div className="col">
                                 <dl>
                                     <dt>Cliente</dt>
-                                    <dd id="infoCliente">{customer}</dd>
+                                    <dd id="infoCliente">{customer?.nombre || "---"}</dd>
 
                                     <dt>Total</dt>
                                     <dd id="totalVentaDetalle">{totalCurrency(total)}</dd>
@@ -20,9 +20,9 @@ const SaleDetail = ({ customer, total }) => {
                         </div>
                         <div className="row">
                             <div className="col">
-                                <button id="cancelarVenta" className="btn btn-danger">Cancelar</button>
+                                <button id="cancelarVenta" className="btn btn-danger mr-1" onClick={onCancelSale}>Cancelar</button>
 
-                                <button className="btn btn-success" >Finalizar</button>
+                                <button className="btn btn-success" disabled={customer === null} onClick={onCloseSale}>Finalizar</button>
                             </div>
                         </div>
                     </div>

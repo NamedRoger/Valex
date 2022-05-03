@@ -2,7 +2,7 @@ import * as React from "react";
 import { createRoot } from "react-dom/client";
 import { SessionContext, SessionProvider } from "../../providers/useSession";
 import SalesFilter from "./filtros";
-import { getProductsSale, getSales } from "./request";
+import { getProductsSale, getSales, removeSales } from "./request";
 import SalesReportTable from "./table";
 import { Modal } from "react-bootstrap";
 import { totalCurrency } from "../../utils/functions";
@@ -26,7 +26,10 @@ const SalesReport = () => {
     }
 
     const handleDelete = (sale) => {
-        console.log(sale);
+        (async () => {
+            const res = await removeSales(sale.idVenta, session.idSucursal);
+            setSales([]);
+        })();
     }
 
     const submitFilters = async (filters) => {

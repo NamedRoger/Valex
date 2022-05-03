@@ -53,7 +53,7 @@ class Caja
         AND idSucursal = $this->idSucursal
         LIMIT 1";
         $result = $this->conexion->query($verificarQuery);
-        $corte = $result->fetch_object();
+        $corte = $result->fetchObject();
         return $corte != null && $corte != false;
     }
 }

@@ -15,8 +15,9 @@ const getProductsSale = async (idSale) => {
     return data;
 }
 
-const removeSales = async (idSale) => {
-
+const removeSales = async (idSale, idSucursal) => {
+    const { data } = await post("/controller/ventas/eliminar.php", { venta: idSale, sucursal: idSucursal});
+    return data;
 };
 
 const getBranches = async () => {

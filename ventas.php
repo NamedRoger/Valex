@@ -39,10 +39,11 @@ $con = 	Conexion();
 		<?php include 'fragments/footer.php'; ?>
 	</div>
 	<!-- Modal -->
-	<?php include 'fragments/ventas.modls.php'?>
 	<!-- Modal -->
+	<?php include 'fragments/ventas.modls.php' ?>
 	<?php include 'fragments/js.php' ?>
 	<script type="module" src="./assets/js/modules/sales/index.js"></script>
+
 </body>
 
 </html>

@@ -7,7 +7,7 @@ function getProductoById($id)
 {
     $conexion =  DataBase::getInstance()->getConexion();
     $query = "SELECT * FROM productos WHERE idProducto = $id";
-    $result = $conexion->query($query)->fetch_object();
+    $result = $conexion->query($query)->fetchObject();
     $producto = new Producto(
         $result->codigo,
         $result->idCategoria,
@@ -28,7 +28,7 @@ function getProductoByCodigo($codigo)
 {
     $conexion =  DataBase::getInstance()->getConexion();
     $query = "SELECT * FROM productos WHERE codigo = $codigo";
-    return $conexion->query($query)->fetch_object();
+    return $conexion->query($query)->fetchObject();
 }
 
 function getProductos($filter = null)
@@ -43,9 +43,7 @@ function getProductos($filter = null)
 
     $query .= "LIMIT 15";
     $result = $conexion->query($query);
-    while($producto = $result->fetch_object()){
-        $productos[] = $producto;
-    }
+    $productos = $result->fetchAll(PDO::FETCH_CLASS);
     return $productos;
 }
 

@@ -69,6 +69,6 @@ class Stock
         AND idProducto = $idProducto";
 
         $result = $this->conexion->query($obetenerProductoQuery);
-        return $result->fetch_object();
+        return $result->fetchObject();
     }
 }

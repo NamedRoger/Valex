@@ -10,3 +10,10 @@ export const showAlert = (type, message = "") => {
     if(type === "success") iziToast.success({title: "Ok!", message});
     if(type === "error") iziToast.error({title: "Error!", message: message});
 }
+
+
+export const getCusotmerPrice = (customer, product) => {
+    let price = (customer.precio === "1") ? product.venta :
+        (customer.precio === "2") ? product.medio : product.mayoreo;
+    return price;
+}
