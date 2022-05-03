@@ -31,8 +31,8 @@ class Caja
         $this->fechaInicio = $fecha;
         $abrirCajaQuery = "INSERT INTO arqueo_caja (idUsuario, idSucursal, fechaInicio, montoInicial,estatus)
         VALUES ($this->idUsuario,$this->idSucursal,'$fecha',$this->montoInicial,1)";
-        $result = $this->conexion->query($abrirCajaQuery);
-        $this->id = $this->conexion->insert_id;
+        $result = $this->conexion->exec($abrirCajaQuery);
+        $this->id = $this->conexion->lastInsertId();
     }
 
     public function cerrarCaja($monto )

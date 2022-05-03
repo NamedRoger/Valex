@@ -21,12 +21,13 @@ const findProduct = async (name) => {
 }
 
 const openCashRegisert = async (monto) => {
-    const { data } = await post("", { monto});
+    const { data } = await post("/controller/caja/abrir.php", { monto});
     return data;
 }
 
-const closeCashRegiser = async () => {
-    const { data } = await post("", {});
+const closeCashRegiser = async (id, monto) => {
+    const { data } = await post("/controller/caja/cerrar.php", {id, monto});
+    return data;
 }
 
 const anyProductInStock = async (product) => {
@@ -38,4 +39,6 @@ export {
     findProduct, 
     findCustomer,
     anyProductInStock,
+    openCashRegisert,
+    closeCashRegiser
 };

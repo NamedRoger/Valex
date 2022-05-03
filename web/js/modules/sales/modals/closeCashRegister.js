@@ -2,7 +2,7 @@ import * as React from "react";
 import { Modal } from "react-bootstrap";
 import { useFormik } from "formik";
 import { modals } from "../constants";
-import { findProduct } from "../request";
+import { closeCashRegiser, findProduct } from "../request";
 import { totalCurrency } from "../../../utils/functions";
 
 const CloseCashRegister = ({ onPaid, show, onClose, montoInicial }) => {
@@ -18,8 +18,9 @@ const CloseCashRegister = ({ onPaid, show, onClose, montoInicial }) => {
             "20": 0,
             "monedas": 0,
         },
-        onSubmit: async ({ name }) => {
-            const { data } = await findProduct(name);
+        onSubmit: async () => {
+            await onPaid(total);
+            handleClose();
         },
     });
 

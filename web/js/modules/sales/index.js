@@ -1,7 +1,7 @@
 import * as React from "react";
 import { createRoot } from "react-dom/client";
-import { CLIENTE_VENTA_KEY, PRODUCTOS_VENTA_KEY } from "../../utils/constants";
-import { getCusotmerPrice, getItemLocalStorage, hasItemLocalStorage, setItemLocalStorage } from "../../utils/functions";
+import { CLIENTE_VENTA_KEY, FONDO_KEY, PRODUCTOS_VENTA_KEY } from "../../utils/constants";
+import { getCusotmerPrice, getItemLocalStorage, hasItemLocalStorage, removeItemLocalStorage, setItemLocalStorage } from "../../utils/functions";
 import SaleBreadcrum from "./breadcrum";
 import { modals } from "./constants";
 import CloseCashRegister from "./modals/closeCashRegister";
@@ -9,14 +9,12 @@ import FindCustomerModal from "./modals/findCustomer";
 import FindProductModal from "./modals/findProduct";
 import OpenCashRegister from "./modals/openCashRegister";
 import PaidSale from "./modals/paidSale";
-import { anyProductInStock } from "./request";
+import { anyProductInStock, closeCashRegiser } from "./request";
 import SaleDetail from "./sale-detail";
 import ProductsSalesTable from "./tabla";
 
 const container = document.getElementById("divContainer");
 const root = createRoot(container);
-
-
 
 const initModals = {
     findProduct: false,
@@ -59,7 +57,14 @@ const Sales = () => {
             return null
         }
     });
-    const [fondoCaja, setFondoCaja] = React.useState(0);
+    const [fondoCaja, setFondoCaja] = React.useState(() => {
+        if(hasItemLocalStorage(FONDO_KEY)){
+            const fondo = JSON.parse(getItemLocalStorage(FONDO_KEY));
+            return fondo;
+        } else {
+            return null;
+        }
+    });
     const [totalSale, setTotalSale] = React.useState(0);
 
     const [modalsState, dispatchModals] = React.useReducer(reducer, initModals);
@@ -155,6 +160,16 @@ const Sales = () => {
         })();
     }, [customer]);
 
+    React.useEffect(() => {
+        if(!fondoCaja){
+            dispatchModals({modal: modals.openCash, value: true});
+        }
+    }, []);
+
+    React.useEffect(() => {
+        setItemLocalStorage(FONDO_KEY, JSON.stringify(fondoCaja));
+    },[fondoCaja]);
+
 
     return (
         <>
@@ -196,12 +211,19 @@ const Sales = () => {
             <OpenCashRegister
                 show={modalsState.openCash}
                 onClose={handleCloseModal}
-                onPaid={() => { }}></OpenCashRegister>
+                onPaid={({id, monto}) => {
+                    setFondoCaja({id, monto});
+                 }}></OpenCashRegister>
             <CloseCashRegister 
                 show={modalsState.closeCash}
                 onClose={handleCloseModal}
-                montoInicial={fondoCaja}
-                onPaid={() => { }}></CloseCashRegister>
+                montoInicial={fondoCaja?.monto || 0}
+                onPaid={async (total) => {
+                    const {data, success} = await closeCashRegiser(fondoCaja.id, total);
+                    if(success){
+                        removeItemLocalStorage(FONDO_KEY);
+                    }
+                 }}></CloseCashRegister>
         </>
     );
 };

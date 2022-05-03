@@ -2,15 +2,17 @@ import * as React from "react";
 import { Modal } from "react-bootstrap";
 import { useFormik } from "formik";
 import { modals } from "../constants";
-import { findProduct } from "../request";
+import { openCashRegisert } from "../request";
 
 const OpenCashRegister = ({ onPaid, show, onClose }) => {
     const formik = useFormik({
         initialValues: {
             paid: "",
         },
-        onSubmit: async ({ name }) => {
-            const { data } = await findProduct(name);
+        onSubmit: async ({ paid }) => {
+            const { data } = await openCashRegisert(paid);
+            onPaid(data);
+            handleClose();
         },
     });
 

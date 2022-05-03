@@ -4,20 +4,23 @@ import {
   getCusotmerPrice,
   getItemLocalStorage,
   hasItemLocalStorage,
+  removeItemLocalStorage as removeItemLocalStorage2,
   setItemLocalStorage,
   totalCurrency
-} from "../chunk-RY4J5YH5.js";
+} from "../chunk-JOUDELDQ.js";
 import {
   CLIENTE_VENTA_KEY,
+  FONDO_KEY,
   PRODUCTOS_VENTA_KEY,
   __spreadProps,
   __spreadValues,
   __toESM,
   get,
+  post,
   require_client,
   require_react,
   useFormik
-} from "../chunk-UTERFIYZ.js";
+} from "../chunk-D4D5XAUL.js";
 
 // web/js/modules/sales/index.js
 var React9 = __toESM(require_react());
@@ -100,6 +103,14 @@ var findProduct = async (name) => {
   const { data } = await get("/controller/productos/filtro.php?filter=" + name);
   return data;
 };
+var openCashRegisert = async (monto) => {
+  const { data } = await post("/controller/caja/abrir.php", { monto });
+  return data;
+};
+var closeCashRegiser = async (id, monto) => {
+  const { data } = await post("/controller/caja/cerrar.php", { id, monto });
+  return data;
+};
 var anyProductInStock = async (product) => {
   let { data } = await get("/controller/stock/validar?idProducto=" + product.idProducto);
   return data.data;
@@ -118,8 +129,9 @@ var CloseCashRegister = ({ onPaid, show, onClose, montoInicial }) => {
       "20": 0,
       "monedas": 0
     },
-    onSubmit: async ({ name }) => {
-      const { data } = await findProduct(name);
+    onSubmit: async () => {
+      await onPaid(total);
+      handleClose();
     }
   });
   React2.useEffect(() => {
@@ -389,8 +401,10 @@ var OpenCashRegister = ({ onPaid, show, onClose }) => {
     initialValues: {
       paid: ""
     },
-    onSubmit: async ({ name }) => {
-      const { data } = await findProduct(name);
+    onSubmit: async ({ paid }) => {
+      const { data } = await openCashRegisert(paid);
+      onPaid(data);
+      handleClose();
     }
   });
   const handleClose = () => {
@@ -584,7 +598,14 @@ var Sales = () => {
       return null;
     }
   });
-  const [fondoCaja, setFondoCaja] = React9.useState(0);
+  const [fondoCaja, setFondoCaja] = React9.useState(() => {
+    if (hasItemLocalStorage(FONDO_KEY)) {
+      const fondo = JSON.parse(getItemLocalStorage(FONDO_KEY));
+      return fondo;
+    } else {
+      return null;
+    }
+  });
   const [totalSale, setTotalSale] = React9.useState(0);
   const [modalsState, dispatchModals] = React9.useReducer(reducer, initModals);
   const handleCloseModal = (modal) => dispatchModals({ modal, value: false });
@@ -661,6 +682,14 @@ var Sales = () => {
       setItemLocalStorage(CLIENTE_VENTA_KEY, JSON.stringify(customer));
     })();
   }, [customer]);
+  React9.useEffect(() => {
+    if (!fondoCaja) {
+      dispatchModals({ modal: modals.openCash, value: true });
+    }
+  }, []);
+  React9.useEffect(() => {
+    setItemLocalStorage(FONDO_KEY, JSON.stringify(fondoCaja));
+  }, [fondoCaja]);
   return /* @__PURE__ */ React9.createElement(React9.Fragment, null, /* @__PURE__ */ React9.createElement(breadcrum_default, {
     openModal: ({ modal, value }) => {
       dispatchModals({ modal, value });
@@ -708,13 +737,18 @@ var Sales = () => {
   }), /* @__PURE__ */ React9.createElement(openCashRegister_default, {
     show: modalsState.openCash,
     onClose: handleCloseModal,
-    onPaid: () => {
+    onPaid: ({ id, monto }) => {
+      setFondoCaja({ id, monto });
     }
   }), /* @__PURE__ */ React9.createElement(closeCashRegister_default, {
     show: modalsState.closeCash,
     onClose: handleCloseModal,
-    montoInicial: fondoCaja,
-    onPaid: () => {
+    montoInicial: (fondoCaja == null ? void 0 : fondoCaja.monto) || 0,
+    onPaid: async (total) => {
+      const { data, success } = await closeCashRegiser(fondoCaja.id, total);
+      if (success) {
+        removeItemLocalStorage2(FONDO_KEY);
+      }
     }
   }));
 };
