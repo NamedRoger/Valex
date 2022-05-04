@@ -32,7 +32,8 @@ try{
     foreach($producosVenta as $productoVenta){
         $idProducto = $productoVenta->idProducto;
         $cantidad = 0;
-        $productoStock = $connection->query("SELECT * FROM stock WHERE idSucursal = $sucursal AND idProducto = $idProducto")->fetchObject();
+        $resProd = $connection->query("SELECT * FROM stock WHERE idSucursal = $sucursal AND idProducto = $idProducto");
+        $productoStock = $resProd->fetchObject();
         $cantidad = floatval($productoStock->stock) + floatval($productoVenta->cantidad);
         $productosStock[] =$cantidad;
         $productoUpdateStockQuery = "UPDATE stock SET stock = $cantidad WHERE idSucursal = $sucursal AND idProducto = $idProducto";
@@ -45,7 +46,7 @@ try{
         throw new Exception("no se pudo eliminar la venta");
     }
 
-    echo json_encode($response);
+    echo json_encode($sucursal);
 }catch(Exception $exception){
     echo json_encode($response);
 }

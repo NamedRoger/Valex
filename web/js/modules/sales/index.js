@@ -9,7 +9,7 @@ import FindCustomerModal from "./modals/findCustomer";
 import FindProductModal from "./modals/findProduct";
 import OpenCashRegister from "./modals/openCashRegister";
 import PaidSale from "./modals/paidSale";
-import { anyProductInStock, closeCashRegiser } from "./request";
+import { anyProductInStock, closeCashRegiser, closeSale,  } from "./request";
 import SaleDetail from "./sale-detail";
 import ProductsSalesTable from "./tabla";
 
@@ -85,7 +85,7 @@ const Sales = () => {
         setCustomer(null);
     }
 
-    const closeSale = () => {
+    const closeSaleModal = () => {
         dispatchModals({ modal: modals.paidSale, value: true })
     }
 
@@ -193,7 +193,7 @@ const Sales = () => {
                         </div>
                     </div>
                 </div>
-                <SaleDetail customer={customer} total={totalSale} onCloseSale={closeSale} onCancelSale={cancelSale}></SaleDetail>
+                <SaleDetail customer={customer} total={totalSale} onCloseSale={closeSaleModal} onCancelSale={cancelSale}></SaleDetail>
             </div>
             <FindProductModal
                 show={modalsState.findProduct}
@@ -207,7 +207,12 @@ const Sales = () => {
                 show={modalsState.paidSale}
                 onClose={handleCloseModal}
                 total={totalSale}
-                onPaid={() => { }}></PaidSale>
+                onPaid={async ({total, cambio, paid}) => {
+                    const {data, success} = await closeSale({total, cambio, paid, customer, products});
+                    if(success){
+                        cancelSale();
+                    }
+                 }}></PaidSale>
             <OpenCashRegister
                 show={modalsState.openCash}
                 onClose={handleCloseModal}

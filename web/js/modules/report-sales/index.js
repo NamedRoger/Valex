@@ -14,6 +14,7 @@ const SalesReport = () => {
     const [session] = React.useContext(SessionContext);
     const [sales, setSales] = React.useState([]);
     const [sale, setSale] = React.useState(null);
+    const [sucursal, setSucursal] = React.useState(0);
     const [openModal, setOpenModal] = React.useState(false);
 
     const handleView = (sale) => {
@@ -27,13 +28,15 @@ const SalesReport = () => {
 
     const handleDelete = (sale) => {
         (async () => {
-            const res = await removeSales(sale.idVenta, session.idSucursal);
+            const idSucursal  = (session.rol == 1)? sucursal : session.idSucursal;
+            const res = await removeSales(sale.idVenta, idSucursal);
             setSales([]);
         })();
     }
 
     const submitFilters = async (filters) => {
         const sales = await getSales(filters);
+        setSucursal(filters.branch);
         setSales(sales);
     }
 

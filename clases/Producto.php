@@ -57,7 +57,7 @@ class Producto
         $conextion = DataBase::getInstance()->getConexion();
         $query = "SELECT * FROM productos WHERE idProducto = $idProducto";
         $result = $conextion->query($query);
-        $productoDb = $result->fetch_object();
+        $productoDb = $result->fetchObject();
         $producto = new Producto(
             $productoDb->codigo,
             $productoDb->idCategoria,

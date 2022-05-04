@@ -2,7 +2,6 @@ import * as React from "react";
 import { Modal } from "react-bootstrap";
 import { useFormik } from "formik";
 import { modals } from "../constants";
-import { findProduct } from "../request";
 import { totalCurrency } from "../../../utils/functions";
 
 const PaidSale = ({ onPaid, show, onClose, total }) => {
@@ -12,8 +11,9 @@ const PaidSale = ({ onPaid, show, onClose, total }) => {
         initialValues: {
             paid: "",
         },
-        onSubmit: async ({ name }) => {
-            const { data } = await findProduct(name);
+        onSubmit: async ({ paid }) => {
+            await onPaid({total, cambio, paid});
+            handleClose();
         },
     });
 
@@ -22,6 +22,10 @@ const PaidSale = ({ onPaid, show, onClose, total }) => {
         onClose(modals.paidSale);
         formik.resetForm();
     }
+
+    React.useEffect(() => {
+        setCambio(formik.values.paid - total);
+    }, [formik.values.paid]);
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header>
@@ -42,10 +46,7 @@ const PaidSale = ({ onPaid, show, onClose, total }) => {
                             type="number"
                             required
                             value={formik.values.paid}
-                            onChange={(e) => {
-                                setCambio(formik.values.paid - total);
-                                formik.handleChange(e);
-                            }} />
+                            onChange={formik.handleChange} />
                         <div className="form-group">
                             <h4>Cambio Venta:</h4>
                             <span >{totalCurrency(cambio)}</span>

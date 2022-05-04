@@ -17,11 +17,6 @@ const SaleBreadcrum = ({openModal, customer}) => {
                         </button>
                     </div>
                     <div className="pe-1 mb-xl-0">
-                        <button type="button" className="btn btn-info me-2 btn-b" data-bs-toggle="modal" data-bs-target="#nuevoCliente" >
-                            <i className="bi bi-person-plus"></i>
-                        </button>
-                    </div>
-                    <div className="pe-1 mb-xl-0">
                         <button type="button" className="btn btn-primary me-2" disabled={customer === null} onClick={() => openModal({modal: modals.findProduct, value: true})}>
                             <i className="bi bi-search"></i>
                         </button>

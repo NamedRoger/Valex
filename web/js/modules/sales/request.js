@@ -1,8 +1,9 @@
 import { CLIENTE_VENTA_KEY, PRODUCTOS_VENTA_KEY } from "../../utils/constants";
 import { get, post} from "../../utils/http";
 
-const closeSale = async () => {
-
+const closeSale = async ({total, cambio, paid, customer, products}) => {
+    const { data } = await post("/controller/ventas/crear.php", {total, cambio, paid, customer, products});
+    return data;
 }
 
 const cancelSale = async () => {
@@ -40,5 +41,6 @@ export {
     findCustomer,
     anyProductInStock,
     openCashRegisert,
-    closeCashRegiser
+    closeCashRegiser,
+    closeSale
 };

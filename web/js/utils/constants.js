@@ -1,4 +1,4 @@
-export const API_URL = "http://localhost";
+export const API_URL = "http://donhuachinango.com/";
 
 export const HTTP_HEADERS_BASE = {
     "Content-Type": "application/json",
