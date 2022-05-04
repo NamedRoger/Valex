@@ -1,4 +1,7 @@
-			<?php $ROL = $_SESSION["rol"]; ?>
+			<?php 
+				$ROL = $_SESSION["rol"]; 
+				$PERMISO = $_SESSION["permiso"];
+			?>
 			<!-- main-sidebar -->
 			<div class="app-sidebar__overlay" data-bs-toggle="sidebar"></div>
 			<aside class="app-sidebar sidebar-scroll">
@@ -62,7 +65,8 @@
 							</li>
 						<?php } ?>
 						
-						<?php if ($ROL == 1 || $ROL == 2) { ?>
+						<?php if (($ROL == 1 || $ROL == 2) || $PERMISO == 1) { ?>
+							<?php if($ROL == 1 || $ROL == 2) {?>
 							<li class="slide">
 								<a class="side-menu__item sub" href="reporte-ventas">
 									<svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" width="16" height="16" fill="currentColor" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
@@ -77,6 +81,7 @@
 									</svg>
 									<span class="side-menu__label">Arqueo de Cajas</span></a>
 							</li>
+							<?php } ?>
 
 							<li class="side-item side-item-category">Catálogos</li>
 							<li class="slide">
@@ -86,9 +91,11 @@
 									</svg>
 									<span class="side-menu__label">Catálogos</span><i class="angle fe fe-chevron-down"></i></a>
 								<ul class="slide-menu">
-									<li><a class="slide-item sub" href="clientes">Clientes</a></li>
-									<li><a class="slide-item sub" href="categorias">Categorías</a></li>
-									<li><a class="slide-item sub" href="productos">Productos</a></li>
+									<?php if($ROL == 1 || $ROL == 2) {?>
+										<li><a class="slide-item sub" href="clientes">Clientes</a></li>
+										<li><a class="slide-item sub" href="categorias">Categorías</a></li>
+										<li><a class="slide-item sub" href="productos">Productos</a></li>
+									<?php } ?>
 									<li><a class="slide-item sub" href="stock">Stock</a></li>
 								</ul>
 							</li>
@@ -106,6 +113,7 @@
 									</ul>
 								</li>
 							<?php } ?>
+							<?php if($ROL == 1 || $ROL == 2) {?>
 							<li class="side-item side-item-category">Herramientas</li>
 							<li class="slide">
 								<a class="side-menu__item sub" data-bs-toggle="slide" href="#">
@@ -114,9 +122,11 @@
 									</svg>
 									<span class="side-menu__label">Herramientas</span><i class="angle fe fe-chevron-down"></i></a>
 								<ul class="slide-menu">
-									<li><a class="slide-item sub" href="checador">Chcador</a></li>
+									<li><a class="slide-item sub" href="checador">Checador</a></li>
 								</ul>
 							</li>
+							<?php } ?>
+
 						<?php } ?>
 					</ul>
 				</div>

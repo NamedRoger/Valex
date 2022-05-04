@@ -32,7 +32,7 @@
 						if ($num_row != 1) {
 							$response["success"] = 6;
 						}else{
-							$consulta = $con->query("SELECT idUsuario, rol, idSucursal, nombre, genero FROM users WHERE password = '$password' AND usuario = '$usuario'");
+							$consulta = $con->query("SELECT idUsuario, rol, idSucursal, nombre, genero, permiso FROM users WHERE password = '$password' AND usuario = '$usuario'");
 							$num_row = $consulta->num_rows;
 							if ($num_row != 1) {
 								$response["success"] = 7;
@@ -53,6 +53,7 @@
 								$_SESSION['idSucursal'] = $row['idSucursal'];
 								$_SESSION['nombre'] = $row['nombre'];
 								$_SESSION['genero'] = $row['genero'];
+								$_SESSION["permiso"] = $row["permiso"];
 								$con->close();
 								$response["success"] = 8;
 								$response["session"] = $_SESSION;
