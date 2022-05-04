@@ -46,10 +46,7 @@
 												<th>Decripción</th>
 												<th>Categoría</th>
 												<th>U/Medida</th>
-												<th>Compra</th>
 												<th>Venta</th>
-												<th>Medio-Mayoreo</th>
-												<th>Mayoreo</th>
 												<th>Stock</th>
 												<th>Resurtir</th>
 												<?php 

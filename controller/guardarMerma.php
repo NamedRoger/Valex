@@ -6,6 +6,7 @@
 
 	$merma = trim(mysqli_escape_string($con, $_POST['merma']));
 	$idStock = trim(mysqli_escape_string($con, $_POST['idStock']));
+	$comentario = trim(mysqli_escape_string($con, $_POST['comentario']));
 
 	if (empty($merma)) {
 		echo 1;
@@ -20,7 +21,7 @@
 			$consulta = $con->query("SELECT medida FROM productos WHERE idProducto = '$producto'");
 			$row = $consulta->fetch_array();
 			$total = $existencia - $merma;
-			$actualizar = $con->query("UPDATE stock SET stock = '$total' WHERE idStock = '$idStock'");
+			$actualizar = $con->query("UPDATE stock SET stock = '$total', comentario = '$comentario' WHERE idStock = '$idStock'");
 			if (!$actualizar) {
 				printf("Error en ejecución contacte con soporte: %s\n", $con->error);
 			}else{

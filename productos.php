@@ -33,8 +33,13 @@
 							<div class="card">
 								<div class="card-body">
 									<h5 class="mb-3">Formulario productos</h5>
-									<form id="formProductos">
+									<form id="formProductos" enctype="multipart/formdata">
 										<div class="row row-sm">
+											<p style="text-align: center;"><img id="imagenPrevisualizacion" src="assets/img/box.png" class="image-preview" alt="preview image" width="150px"></p>
+											<div class="form-group">
+												<label>Foto</label>
+												<input type="file" id="foto" name="foto" class="form-control form-control-sm">
+											</div>
 											<div class="form-group">
 												<label>Codigo de barras</label>
 												<input type="text" id="codigo" name="codigo" class="form-control form-control-sm">
@@ -84,7 +89,7 @@
 												<input type="number" id="mayoreo" name="mayoreo" class="form-control form-control-sm">
 											</div>
 											<div>
-												<button class="btn btn-primary" onclick="GuardarProducto(); return false;">Guardar</button>
+												<button class="btn btn-primary" id="empresa">Guardar</button>
 											</div>
 										</div>
 									</form>
@@ -98,9 +103,10 @@
 									<table class="table" id="tablaProductos">
 										<thead>
 											<tr>
+												<th>Foto</th>
 												<th>Codigo de Barras</th>
 												<th>Producto</th>
-												<th>Decripción</th>
+												<th>Descripción</th>
 												<th>Categoría</th>
 												<th>U/Medida</th>
 												<th>Compra</th>
@@ -136,5 +142,26 @@
 				
 		</div>
 		<?php include 'fragments/js.php' ?>
+		<script>
+			// Obtener referencia al input y a la imagen
+			const foto = document.querySelector("#foto"),
+			$imagenPrevisualizacion = document.querySelector("#imagenPrevisualizacion");
+			// Escuchar cuando cambie
+			foto.addEventListener("change", () => {
+			  // Los archivos seleccionados, pueden ser muchos o uno
+			  const archivos = foto.files;
+			  // Si no hay archivos salimos de la función y quitamos la imagen
+			  if (!archivos || !archivos.length) {
+			    $imagenPrevisualizacion.src = "";
+			    return;
+			  }
+			  // Ahora tomamos el primer archivo, el cual vamos a previsualizar
+			  const primerArchivo = archivos[0];
+			  // Lo convertimos a un objeto de tipo objectURL
+			  const objectURL = URL.createObjectURL(primerArchivo);
+			  // Y a la fuente de la imagen le ponemos el objectURL
+			  $imagenPrevisualizacion.src = objectURL;
+			});
+		</script>
 	</body>
 </html>

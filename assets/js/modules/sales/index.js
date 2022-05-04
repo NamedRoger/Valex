@@ -1,2 +1,757 @@
-import{a as _,b as j,c as H,d as Y,e as S,f as $,g as V,h}from"../chunk-Z5J2ARA6.js";import{a as P,b as R,e as M,f as x,h as pe,i as O,j as A,k as D,n as k,o as J,p as K}from"../chunk-ZVGFYNKE.js";var n=M(x()),ne=M(pe());var f=M(x());var b={findProduct:"findProduct",findCustomer:"findCustomer",closeCash:"closeCash",openCash:"openCash",paidSale:"paidSale"};var ve=({openModal:e,customer:o})=>f.createElement(f.Fragment,null,f.createElement("div",{className:"breadcrumb-header justify-content-between"},f.createElement("div",{className:"my-auto"},f.createElement("div",{className:"d-flex"},f.createElement("h3",{className:"content-title mb-0 my-auto"},"Venta"))),f.createElement("div",{className:"d-flex my-xl-auto right-content"},f.createElement("div",{className:"pe-1 mb-xl-0"},f.createElement("button",{type:"button",className:"btn btn-success me-2",onClick:()=>e({modal:b.findCustomer,value:!0})},f.createElement("i",{className:"bi bi-person-circle"}))),f.createElement("div",{className:"pe-1 mb-xl-0"},f.createElement("button",{type:"button",className:"btn btn-primary me-2",disabled:o===null,onClick:()=>e({modal:b.findProduct,value:!0})},f.createElement("i",{className:"bi bi-search"}))),f.createElement("div",{className:"mb-xl-0"},f.createElement(V,{className:"btn-group dropdown"},f.createElement(V.Toggle,{variant:"warning",id:"dropdownMenuDate"},"Caja"),f.createElement(V.Menu,null,f.createElement(V.Item,{onClick:()=>e({modal:b.openCash,value:!0})},"Abrir"),f.createElement(V.Item,{onClick:()=>e({modal:b.closeCash,value:!0})},"Cerrar"))))))),U=ve;var a=M(x());var q=async({total:e,cambio:o,paid:r,customer:c,products:l})=>{let{data:u}=await K("/controller/ventas/crear.php",{total:e,cambio:o,paid:r,customer:c,products:l});return u};var Q=async e=>{let{data:o}=await J("/controller/clientes/filtro.php?filter="+e);return o},z=async e=>{let{data:o}=await J("/controller/productos/filtro.php?filter="+e);return o},G=async e=>{let{data:o}=await K("/controller/caja/abrir.php",{monto:e});return o},W=async(e,o)=>{let{data:r}=await K("/controller/caja/cerrar.php",{id:e,monto:o});return r},X=async e=>{let{data:o}=await J("/controller/stock/validar?idProducto="+e.idProducto);return o.data};var fe=({onPaid:e,show:o,onClose:r,montoInicial:c})=>{let[l,u]=a.useState(0),s=k({initialValues:{"1000":0,"500":0,"200":0,"100":0,"50":0,"20":0,monedas:0},onSubmit:async()=>{await e(l),C()}});a.useEffect(()=>{let E=Object.keys(s.values).map(T=>T==="monedas"?new Number(s.values[T]):new Number(T)*new Number(s.values[T])).reduce((T,L)=>T+=L,0);u(E)},[s.values]);let C=()=>{r(b.closeCash),s.resetForm()};return a.createElement(h,{show:o,onHide:C},a.createElement(h.Header,null,a.createElement("h5",{className:"modal-title",id:"exampleModalLabel"},"Cerrar Caja"),a.createElement("button",{type:"button",className:"btn-close",onClick:C})),a.createElement(h.Body,null,a.createElement("form",{onSubmit:s.handleSubmit},a.createElement("div",{className:"row"},a.createElement("div",{className:"col"},a.createElement("h4",null,"Fondo:")),a.createElement("div",{className:"col"},a.createElement("h5",{id:"fondoCaja"},S(c)))),a.createElement("div",{className:"row"},a.createElement("label",{htmlFor:"",className:"col"},"$1000"),a.createElement("div",{className:"col"},a.createElement("input",{type:"number",onChange:s.handleChange,value:s.values["1000"],min:"0",className:"form-control input-cierre",name:"1000"}))),a.createElement("div",{className:"row"},a.createElement("label",{htmlFor:"",className:"col"},"$500"),a.createElement("div",{className:"col"},a.createElement("input",{type:"number",onChange:s.handleChange,value:s.values["500"],min:"0",className:"form-control input-cierre",name:"500"}))),a.createElement("div",{className:"row"},a.createElement("label",{htmlFor:"",className:"col"},"$200"),a.createElement("div",{className:"col"},a.createElement("input",{type:"number",onChange:s.handleChange,value:s.values["200"],min:"0",className:"form-control input-cierre",name:"200"}))),a.createElement("div",{className:"row"},a.createElement("label",{htmlFor:"",className:"col"},"$100"),a.createElement("div",{className:"col"},a.createElement("input",{type:"number",onChange:s.handleChange,value:s.values["100"],min:"0",className:"form-control input-cierre",name:"100"}))),a.createElement("div",{className:"row"},a.createElement("label",{htmlFor:"",className:"col"},"$50"),a.createElement("div",{className:"col"},a.createElement("input",{type:"number",onChange:s.handleChange,value:s.values["50"],min:"0",className:"form-control input-cierre",name:"50"}))),a.createElement("div",{className:"row"},a.createElement("label",{htmlFor:"",className:"col"},"$20"),a.createElement("div",{className:"col"},a.createElement("input",{type:"number",onChange:s.handleChange,value:s.values["20"],min:"0",className:"form-control input-cierre",name:"20"}))),a.createElement("div",{className:"row"},a.createElement("label",{htmlFor:"",className:"col"},"Monedas"),a.createElement("div",{className:"col"},a.createElement("input",{type:"number",onChange:s.handleChange,value:s.values.monedas,min:"0",className:"form-control input-cierre",name:"monedas"}))),a.createElement("div",{className:"row"},a.createElement("div",{className:"col"},a.createElement("h4",null,"Total:")),a.createElement("div",{className:"col"},a.createElement("h5",{id:"totalCierre"},S(l)))),a.createElement("div",{className:"form-group"},a.createElement("button",{className:"btn btn-primary",type:"submit"},"Pagar")))))},Z=fe;var i=M(x());var he=({selectedCustomer:e,show:o,onClose:r})=>{let[c,l]=i.useState([]),u=k({initialValues:{name:""},onSubmit:async({name:C})=>{let{data:y}=await Q(C);l(y)}}),s=()=>{l([]),r(b.findCustomer),u.resetForm()};return i.createElement(h,{show:o,onHide:s},i.createElement(h.Header,null,i.createElement("h5",{className:"modal-title",id:"exampleModalLabel"},"Agregar Cliente a Venta"),i.createElement("button",{type:"button",className:"btn-close",onClick:s})),i.createElement(h.Body,null,i.createElement("form",{onSubmit:u.handleSubmit},i.createElement("div",{className:"form-group row"},i.createElement("div",{className:"col-9"},i.createElement("input",{className:"form-control",placeholder:"Buscar...",name:"name",value:u.values.name,onChange:u.handleChange})),i.createElement("div",{className:"col-3"},i.createElement("button",{className:"btn btn-primary",type:"submit"},"Buscar")))),i.createElement("div",null,i.createElement("table",{style:{width:"100%"}},i.createElement("thead",null,i.createElement("tr",null,i.createElement("th",null,"Cliente"),i.createElement("th",null,"Acci\xF3n"))),i.createElement("tbody",null,c.map((C,y)=>i.createElement("tr",{key:y},i.createElement("td",null,C.nombre),i.createElement("td",null,i.createElement("button",{className:"btn btn-sm btn-success",onClick:()=>{e(C),s()}},"Agregar")))))))))},ee=he;var m=M(x());var Ce=({selectedProduct:e,show:o,onClose:r})=>{let[c,l]=m.useState([]),u=k({initialValues:{name:""},onSubmit:async({name:C})=>{let{data:y}=await z(C);l(y)}}),s=()=>{l([]),r(b.findProduct),u.resetForm()};return m.createElement(h,{show:o,onHide:s},m.createElement(h.Header,null,m.createElement("h5",{className:"modal-title",id:"exampleModalLabel"},"Agregar Producto a Venta"),m.createElement("button",{type:"button",className:"btn-close",onClick:s})),m.createElement(h.Body,null,m.createElement("form",{onSubmit:u.handleSubmit},m.createElement("div",{className:"form-group row"},m.createElement("div",{className:"col-9"},m.createElement("input",{className:"form-control",placeholder:"Buscar...",name:"name",value:u.values.name,onChange:u.handleChange})),m.createElement("div",{className:"col-3"},m.createElement("button",{className:"btn btn-primary",type:"submit"},"Buscar")))),m.createElement("div",null,m.createElement("table",{style:{width:"100%"}},m.createElement("thead",null,m.createElement("tr",null,m.createElement("th",null,"Producto"),m.createElement("th",null,"Acci\xF3n"))),m.createElement("tbody",null,c.map((C,y)=>m.createElement("tr",{key:y},m.createElement("td",null,C.nombre),m.createElement("td",null,m.createElement("button",{className:"btn btn-sm btn-success",onClick:()=>e(C)},"Agregar")))))))))},ae=Ce;var w=M(x());var Ne=({onPaid:e,show:o,onClose:r})=>{let c=k({initialValues:{paid:""},onSubmit:async({paid:u})=>{let{data:s}=await G(u);e(s),l()}}),l=()=>{r(b.openCash),c.resetForm()};return w.createElement(h,{show:o,onHide:l},w.createElement(h.Header,null,w.createElement("h5",{className:"modal-title",id:"exampleModalLabel"},"Abrir Caja"),w.createElement("button",{type:"button",className:"btn-close",onClick:l})),w.createElement(h.Body,null,w.createElement("form",{onSubmit:c.handleSubmit},w.createElement("div",{className:"form-group"},w.createElement("h4",null,"Recibe:"),w.createElement("input",{className:"form-control",name:"paid",type:"number",required:!0,value:c.values.paid,onChange:u=>{c.handleChange(u)}})),w.createElement("div",{className:"form-group"},w.createElement("button",{className:"btn btn-primary",disabled:c.values.paid==0,type:"submit"},"Abrir")))))},te=Ne;var p=M(x());var ye=({onPaid:e,show:o,onClose:r,total:c})=>{let[l,u]=p.useState(0),s=k({initialValues:{paid:""},onSubmit:async({paid:y})=>{await e({total:c,cambio:l,paid:y}),C()}}),C=()=>{u(0),r(b.paidSale),s.resetForm()};return p.useEffect(()=>{u(s.values.paid-c)},[s.values.paid]),p.createElement(h,{show:o,onHide:C},p.createElement(h.Header,null,p.createElement("h5",{className:"modal-title",id:"exampleModalLabel"},"Pagar Venta"),p.createElement("button",{type:"button",className:"btn-close",onClick:C})),p.createElement(h.Body,null,p.createElement("form",{onSubmit:s.handleSubmit},p.createElement("div",{className:"form-group"},p.createElement("h4",null,"Total Venta:"),p.createElement("span",null,S(c))),p.createElement("div",{className:"form-group"},p.createElement("h4",null,"Recibe:"),p.createElement("input",{className:"form-control",name:"paid",type:"number",required:!0,value:s.values.paid,onChange:s.handleChange}),p.createElement("div",{className:"form-group"},p.createElement("h4",null,"Cambio Venta:"),p.createElement("span",null,S(l))),p.createElement("div",{className:"col-3"},p.createElement("button",{className:"btn btn-primary",disabled:l<0||s.values.paid==0,type:"submit"},"Pagar"))))))},oe=ye;var N=M(x());var ge=({customer:e,total:o,onCancelSale:r,onCloseSale:c})=>N.createElement(N.Fragment,null,N.createElement("div",{className:"col-4"},N.createElement("div",{className:"card"},N.createElement("div",{className:"card-body"},N.createElement("div",{className:"row"},N.createElement("div",{className:"col"},N.createElement("dl",null,N.createElement("dt",null,"Cliente"),N.createElement("dd",{id:"infoCliente"},(e==null?void 0:e.nombre)||"---"),N.createElement("dt",null,"Total"),N.createElement("dd",{id:"totalVentaDetalle"},S(o))))),N.createElement("div",{className:"row"},N.createElement("div",{className:"col"},N.createElement("button",{id:"cancelarVenta",className:"btn btn-danger mr-1",onClick:r},"Cancelar"),N.createElement("button",{className:"btn btn-success",disabled:e===null,onClick:c},"Finalizar"))))))),se=ge;var d=M(x());var Se=({products:e,total:o,onUpdateQuantity:r,onDeleteProduct:c})=>d.createElement(d.Fragment,null,d.createElement("table",{className:"table table-bordered"},d.createElement("thead",null,d.createElement("tr",null,d.createElement("td",null,"Producto"),d.createElement("td",null,"Precio"),d.createElement("td",null,"Cantidad"),d.createElement("td",null,"Total"),d.createElement("td",null))),d.createElement("tbody",null,e.map((l,u)=>d.createElement("tr",{key:u},d.createElement("td",null,l.nombre),d.createElement("td",null,S(l.precio)),d.createElement("td",null,d.createElement("input",{type:"number",min:1,value:l.cantidad,onChange:s=>r(l,s.target.value)})),d.createElement("td",null,S(l.cantidad*l.precio)),d.createElement("td",null,d.createElement("button",{className:"btn btn-sm btn-danger",onClick:()=>c(l)},"Borrar"))))),d.createElement("tfoot",null,d.createElement("tr",{className:"tx-blod"},d.createElement("td",{colSpan:"2"}),d.createElement("td",null,"TOTAL"),d.createElement("td",{id:"totalVentaTabla"},S(o)))))),le=Se;var we=document.getElementById("divContainer"),Pe=(0,ne.createRoot)(we),Re={findProduct:!1,findCustomer:!1,closeCash:!1,openCash:!1,paidSale:!1},Me=(e,o)=>{switch(o.modal){case b.findProduct:return R(P({},e),{[o.modal]:o.value});case b.findCustomer:return R(P({},e),{[o.modal]:o.value});case b.paidSale:return R(P({},e),{[o.modal]:o.value});case b.openCash:return R(P({},e),{[o.modal]:o.value});case b.closeCash:return R(P({},e),{[o.modal]:o.value})}},ke=()=>{let[e,o]=n.useState(()=>_(A)?JSON.parse(j(A)):[]),[r,c]=n.useState(()=>_(O)?JSON.parse(j(O)):null),[l,u]=n.useState(()=>_(D)?JSON.parse(j(D)):null),[s,C]=n.useState(0),[y,B]=n.useReducer(Me,Re),E=t=>B({modal:t,value:!1}),T=t=>{t=R(P({},t),{idCliente:new Number(t.idCliente)}),H(O,JSON.stringify(t)),c(t)},L=()=>{o([]),c(null)},re=()=>{B({modal:b.paidSale,value:!0})},de=t=>{console.log(t);let v=$(r,t);t=R(P({},t),{mayoreo:new Number(t.mayoreo),medida:new Number(t.medida),medio:new Number(t.medio),venta:new Number(t.venta),precio:v,cantidad:1}),console.log(t),o([...e,t])},ie=(t,v)=>{let g=t.cantidad+v,I=e.map(F=>F.idProducto===t.idProducto?R(P({},F),{cantidad:g}):F);o(I)},me=(t,v)=>{let g=v,I=e.map(F=>F.idProducto===t.idProducto?R(P({},F),{cantidad:g}):F);o(I)},ce=t=>e.findIndex(v=>v.idProducto===t.idProducto)>-1,ue=t=>{let v=e.findIndex(I=>I.idProducto===t.idProducto);return e[v]},be=t=>{(async()=>{if(await X(t)){if(ce(t)){let g=ue(t);ie(g,1)}else de(t);B({modal:b.findProduct,value:!1})}})()};return n.useEffect(()=>{(()=>{H(A,JSON.stringify(e));let t=e.reduce((v,g)=>v+=g.cantidad*$(r,g),0);C(t)})()},[e,r]),n.useEffect(()=>{H(O,JSON.stringify(r))},[r]),n.useEffect(()=>{l||B({modal:b.openCash,value:!0})},[]),n.useEffect(()=>{H(D,JSON.stringify(l))},[l]),n.createElement(n.Fragment,null,n.createElement(U,{openModal:({modal:t,value:v})=>{B({modal:t,value:v})},customer:r}),n.createElement("div",{className:"row"},n.createElement("div",{className:"col-8"},n.createElement("div",{className:"card"},n.createElement("div",{className:"card-body"},n.createElement("div",{className:"row"},n.createElement("div",{className:"col table-responsive"},n.createElement(le,{products:e,total:s,onDeleteProduct:()=>{},onUpdateQuantity:(t,v)=>{me(t,v)}})))))),n.createElement(se,{customer:r,total:s,onCloseSale:re,onCancelSale:L})),n.createElement(ae,{show:y.findProduct,onClose:E,selectedProduct:be}),n.createElement(ee,{show:y.findCustomer,onClose:E,selectedCustomer:T}),n.createElement(oe,{show:y.paidSale,onClose:E,total:s,onPaid:async({total:t,cambio:v,paid:g})=>{let{data:I,success:F}=await q({total:t,cambio:v,paid:g,customer:r,products:e});F&&L()}}),n.createElement(te,{show:y.openCash,onClose:E,onPaid:({id:t,monto:v})=>{u({id:t,monto:v})}}),n.createElement(Z,{show:y.closeCash,onClose:E,montoInicial:(l==null?void 0:l.monto)||0,onPaid:async t=>{let{data:v,success:g}=await W(l.id,t);g&&Y(D)}}))};Pe.render(n.createElement(ke,null));
+import {
+  Dropdown_default,
+  Modal_default,
+  getCusotmerPrice,
+  getItemLocalStorage,
+  hasItemLocalStorage,
+  removeItemLocalStorage as removeItemLocalStorage2,
+  setItemLocalStorage,
+  totalCurrency
+} from "../chunk-OZF5TH3S.js";
+import {
+  CLIENTE_VENTA_KEY,
+  FONDO_KEY,
+  PRODUCTOS_VENTA_KEY,
+  __spreadProps,
+  __spreadValues,
+  __toESM,
+  get,
+  post,
+  require_client,
+  require_react,
+  useFormik
+} from "../chunk-7AN26WI7.js";
+
+// web/js/modules/sales/index.js
+var React9 = __toESM(require_react());
+var import_client = __toESM(require_client());
+
+// web/js/modules/sales/breadcrum.js
+var React = __toESM(require_react());
+
+// web/js/modules/sales/constants.js
+var modals = {
+  findProduct: "findProduct",
+  findCustomer: "findCustomer",
+  closeCash: "closeCash",
+  openCash: "openCash",
+  paidSale: "paidSale"
+};
+
+// web/js/modules/sales/breadcrum.js
+var SaleBreadcrum = ({ openModal, customer }) => {
+  return /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", {
+    className: "breadcrumb-header justify-content-between"
+  }, /* @__PURE__ */ React.createElement("div", {
+    className: "my-auto"
+  }, /* @__PURE__ */ React.createElement("div", {
+    className: "d-flex"
+  }, /* @__PURE__ */ React.createElement("h3", {
+    className: "content-title mb-0 my-auto"
+  }, "Venta"))), /* @__PURE__ */ React.createElement("div", {
+    className: "d-flex my-xl-auto right-content"
+  }, /* @__PURE__ */ React.createElement("div", {
+    className: "pe-1 mb-xl-0"
+  }, /* @__PURE__ */ React.createElement("button", {
+    type: "button",
+    className: "btn btn-success me-2",
+    onClick: () => openModal({ modal: modals.findCustomer, value: true })
+  }, /* @__PURE__ */ React.createElement("i", {
+    className: "bi bi-person-circle"
+  }))), /* @__PURE__ */ React.createElement("div", {
+    className: "pe-1 mb-xl-0"
+  }, /* @__PURE__ */ React.createElement("button", {
+    type: "button",
+    className: "btn btn-primary me-2",
+    disabled: customer === null,
+    onClick: () => openModal({ modal: modals.findProduct, value: true })
+  }, /* @__PURE__ */ React.createElement("i", {
+    className: "bi bi-search"
+  }))), /* @__PURE__ */ React.createElement("div", {
+    className: "mb-xl-0"
+  }, /* @__PURE__ */ React.createElement(Dropdown_default, {
+    className: "btn-group dropdown"
+  }, /* @__PURE__ */ React.createElement(Dropdown_default.Toggle, {
+    variant: "warning",
+    id: "dropdownMenuDate"
+  }, "Caja"), /* @__PURE__ */ React.createElement(Dropdown_default.Menu, null, /* @__PURE__ */ React.createElement(Dropdown_default.Item, {
+    onClick: () => openModal({ modal: modals.openCash, value: true })
+  }, "Abrir"), /* @__PURE__ */ React.createElement(Dropdown_default.Item, {
+    onClick: () => openModal({ modal: modals.closeCash, value: true })
+  }, "Cerrar")))))));
+};
+var breadcrum_default = SaleBreadcrum;
+
+// web/js/modules/sales/modals/closeCashRegister.js
+var React2 = __toESM(require_react());
+
+// web/js/modules/sales/request.js
+var closeSale = async ({ total, cambio, paid, customer, products }) => {
+  const { data } = await post("/controller/ventas/crear.php", { total, cambio, paid, customer, products });
+  return data;
+};
+var findCustomer = async (name) => {
+  const { data } = await get("/controller/clientes/filtro.php?filter=" + name);
+  return data;
+};
+var findProduct = async (name) => {
+  const { data } = await get("/controller/productos/filtro.php?filter=" + name);
+  return data;
+};
+var openCashRegisert = async (monto) => {
+  const { data } = await post("/controller/caja/abrir.php", { monto });
+  return data;
+};
+var closeCashRegiser = async (id, monto) => {
+  const { data } = await post("/controller/caja/cerrar.php", { id, monto });
+  return data;
+};
+var anyProductInStock = async (product) => {
+  let { data } = await get("/controller/stock/validar?idProducto=" + product.idProducto);
+  return data.data;
+};
+
+// web/js/modules/sales/modals/closeCashRegister.js
+var CloseCashRegister = ({ onPaid, show, onClose, montoInicial }) => {
+  const [total, setTotal] = React2.useState(0);
+  const formik = useFormik({
+    initialValues: {
+      "1000": 0,
+      "500": 0,
+      "200": 0,
+      "100": 0,
+      "50": 0,
+      "20": 0,
+      "monedas": 0
+    },
+    onSubmit: async () => {
+      await onPaid(total);
+      handleClose();
+    }
+  });
+  React2.useEffect(() => {
+    const moneyKeys = Object.keys(formik.values);
+    const values = moneyKeys.map((key) => key === "monedas" ? new Number(formik.values[key]) : new Number(key) * new Number(formik.values[key]));
+    const total2 = values.reduce((sum, money) => sum += money, 0);
+    setTotal(total2);
+  }, [formik.values]);
+  const handleClose = () => {
+    onClose(modals.closeCash);
+    formik.resetForm();
+  };
+  return /* @__PURE__ */ React2.createElement(Modal_default, {
+    show,
+    onHide: handleClose
+  }, /* @__PURE__ */ React2.createElement(Modal_default.Header, null, /* @__PURE__ */ React2.createElement("h5", {
+    className: "modal-title",
+    id: "exampleModalLabel"
+  }, "Cerrar Caja"), /* @__PURE__ */ React2.createElement("button", {
+    type: "button",
+    className: "btn-close",
+    onClick: handleClose
+  })), /* @__PURE__ */ React2.createElement(Modal_default.Body, null, /* @__PURE__ */ React2.createElement("form", {
+    onSubmit: formik.handleSubmit
+  }, /* @__PURE__ */ React2.createElement("div", {
+    className: "row"
+  }, /* @__PURE__ */ React2.createElement("div", {
+    className: "col"
+  }, /* @__PURE__ */ React2.createElement("h4", null, "Fondo:")), /* @__PURE__ */ React2.createElement("div", {
+    className: "col"
+  }, /* @__PURE__ */ React2.createElement("h5", {
+    id: "fondoCaja"
+  }, totalCurrency(montoInicial)))), /* @__PURE__ */ React2.createElement("div", {
+    className: "row"
+  }, /* @__PURE__ */ React2.createElement("label", {
+    htmlFor: "",
+    className: "col"
+  }, "$1000"), /* @__PURE__ */ React2.createElement("div", {
+    className: "col"
+  }, /* @__PURE__ */ React2.createElement("input", {
+    type: "number",
+    onChange: formik.handleChange,
+    value: formik.values["1000"],
+    min: "0",
+    className: "form-control input-cierre",
+    name: "1000"
+  }))), /* @__PURE__ */ React2.createElement("div", {
+    className: "row"
+  }, /* @__PURE__ */ React2.createElement("label", {
+    htmlFor: "",
+    className: "col"
+  }, "$500"), /* @__PURE__ */ React2.createElement("div", {
+    className: "col"
+  }, /* @__PURE__ */ React2.createElement("input", {
+    type: "number",
+    onChange: formik.handleChange,
+    value: formik.values["500"],
+    min: "0",
+    className: "form-control input-cierre",
+    name: "500"
+  }))), /* @__PURE__ */ React2.createElement("div", {
+    className: "row"
+  }, /* @__PURE__ */ React2.createElement("label", {
+    htmlFor: "",
+    className: "col"
+  }, "$200"), /* @__PURE__ */ React2.createElement("div", {
+    className: "col"
+  }, /* @__PURE__ */ React2.createElement("input", {
+    type: "number",
+    onChange: formik.handleChange,
+    value: formik.values["200"],
+    min: "0",
+    className: "form-control input-cierre",
+    name: "200"
+  }))), /* @__PURE__ */ React2.createElement("div", {
+    className: "row"
+  }, /* @__PURE__ */ React2.createElement("label", {
+    htmlFor: "",
+    className: "col"
+  }, "$100"), /* @__PURE__ */ React2.createElement("div", {
+    className: "col"
+  }, /* @__PURE__ */ React2.createElement("input", {
+    type: "number",
+    onChange: formik.handleChange,
+    value: formik.values["100"],
+    min: "0",
+    className: "form-control input-cierre",
+    name: "100"
+  }))), /* @__PURE__ */ React2.createElement("div", {
+    className: "row"
+  }, /* @__PURE__ */ React2.createElement("label", {
+    htmlFor: "",
+    className: "col"
+  }, "$50"), /* @__PURE__ */ React2.createElement("div", {
+    className: "col"
+  }, /* @__PURE__ */ React2.createElement("input", {
+    type: "number",
+    onChange: formik.handleChange,
+    value: formik.values["50"],
+    min: "0",
+    className: "form-control input-cierre",
+    name: "50"
+  }))), /* @__PURE__ */ React2.createElement("div", {
+    className: "row"
+  }, /* @__PURE__ */ React2.createElement("label", {
+    htmlFor: "",
+    className: "col"
+  }, "$20"), /* @__PURE__ */ React2.createElement("div", {
+    className: "col"
+  }, /* @__PURE__ */ React2.createElement("input", {
+    type: "number",
+    onChange: formik.handleChange,
+    value: formik.values["20"],
+    min: "0",
+    className: "form-control input-cierre",
+    name: "20"
+  }))), /* @__PURE__ */ React2.createElement("div", {
+    className: "row"
+  }, /* @__PURE__ */ React2.createElement("label", {
+    htmlFor: "",
+    className: "col"
+  }, "Monedas"), /* @__PURE__ */ React2.createElement("div", {
+    className: "col"
+  }, /* @__PURE__ */ React2.createElement("input", {
+    type: "number",
+    onChange: formik.handleChange,
+    value: formik.values["monedas"],
+    min: "0",
+    className: "form-control input-cierre",
+    name: "monedas"
+  }))), /* @__PURE__ */ React2.createElement("div", {
+    className: "row"
+  }, /* @__PURE__ */ React2.createElement("div", {
+    className: "col"
+  }, /* @__PURE__ */ React2.createElement("h4", null, "Total:")), /* @__PURE__ */ React2.createElement("div", {
+    className: "col"
+  }, /* @__PURE__ */ React2.createElement("h5", {
+    id: "totalCierre"
+  }, totalCurrency(total)))), /* @__PURE__ */ React2.createElement("div", {
+    className: "form-group"
+  }, /* @__PURE__ */ React2.createElement("button", {
+    className: "btn btn-primary",
+    type: "submit"
+  }, "Pagar")))));
+};
+var closeCashRegister_default = CloseCashRegister;
+
+// web/js/modules/sales/modals/findCustomer.js
+var React3 = __toESM(require_react());
+var FindCustomerModal = ({ selectedCustomer, show, onClose }) => {
+  const [customers, setCustomers] = React3.useState([]);
+  const formik = useFormik({
+    initialValues: {
+      name: ""
+    },
+    onSubmit: async ({ name }) => {
+      const { data } = await findCustomer(name);
+      setCustomers(data);
+    }
+  });
+  const handleClose = () => {
+    setCustomers([]);
+    onClose(modals.findCustomer);
+    formik.resetForm();
+  };
+  return /* @__PURE__ */ React3.createElement(Modal_default, {
+    show,
+    onHide: handleClose
+  }, /* @__PURE__ */ React3.createElement(Modal_default.Header, null, /* @__PURE__ */ React3.createElement("h5", {
+    className: "modal-title",
+    id: "exampleModalLabel"
+  }, "Agregar Cliente a Venta"), /* @__PURE__ */ React3.createElement("button", {
+    type: "button",
+    className: "btn-close",
+    onClick: handleClose
+  })), /* @__PURE__ */ React3.createElement(Modal_default.Body, null, /* @__PURE__ */ React3.createElement("form", {
+    onSubmit: formik.handleSubmit
+  }, /* @__PURE__ */ React3.createElement("div", {
+    className: "form-group row"
+  }, /* @__PURE__ */ React3.createElement("div", {
+    className: "col-9"
+  }, /* @__PURE__ */ React3.createElement("input", {
+    className: "form-control",
+    placeholder: "Buscar...",
+    name: "name",
+    value: formik.values.name,
+    onChange: formik.handleChange
+  })), /* @__PURE__ */ React3.createElement("div", {
+    className: "col-3"
+  }, /* @__PURE__ */ React3.createElement("button", {
+    className: "btn btn-primary",
+    type: "submit"
+  }, "Buscar")))), /* @__PURE__ */ React3.createElement("div", null, /* @__PURE__ */ React3.createElement("table", {
+    style: { width: "100%" }
+  }, /* @__PURE__ */ React3.createElement("thead", null, /* @__PURE__ */ React3.createElement("tr", null, /* @__PURE__ */ React3.createElement("th", null, "Cliente"), /* @__PURE__ */ React3.createElement("th", null, "Acci\xF3n"))), /* @__PURE__ */ React3.createElement("tbody", null, customers.map((customer, id) => /* @__PURE__ */ React3.createElement("tr", {
+    key: id
+  }, /* @__PURE__ */ React3.createElement("td", null, customer.nombre), /* @__PURE__ */ React3.createElement("td", null, /* @__PURE__ */ React3.createElement("button", {
+    className: "btn btn-sm btn-success",
+    onClick: () => {
+      selectedCustomer(customer);
+      handleClose();
+    }
+  }, "Agregar")))))))));
+};
+var findCustomer_default = FindCustomerModal;
+
+// web/js/modules/sales/modals/findProduct.js
+var React4 = __toESM(require_react());
+var FindProductModal = ({ selectedProduct, show, onClose }) => {
+  const [products, setProducts] = React4.useState([]);
+  const formik = useFormik({
+    initialValues: {
+      name: ""
+    },
+    onSubmit: async ({ name }) => {
+      const { data } = await findProduct(name);
+      setProducts(data);
+    }
+  });
+  const handleClose = () => {
+    setProducts([]);
+    onClose(modals.findProduct);
+    formik.resetForm();
+  };
+  return /* @__PURE__ */ React4.createElement(Modal_default, {
+    show,
+    onHide: handleClose
+  }, /* @__PURE__ */ React4.createElement(Modal_default.Header, null, /* @__PURE__ */ React4.createElement("h5", {
+    className: "modal-title",
+    id: "exampleModalLabel"
+  }, "Agregar Producto a Venta"), /* @__PURE__ */ React4.createElement("button", {
+    type: "button",
+    className: "btn-close",
+    onClick: handleClose
+  })), /* @__PURE__ */ React4.createElement(Modal_default.Body, null, /* @__PURE__ */ React4.createElement("form", {
+    onSubmit: formik.handleSubmit
+  }, /* @__PURE__ */ React4.createElement("div", {
+    className: "form-group row"
+  }, /* @__PURE__ */ React4.createElement("div", {
+    className: "col-9"
+  }, /* @__PURE__ */ React4.createElement("input", {
+    className: "form-control",
+    placeholder: "Buscar...",
+    name: "name",
+    value: formik.values.name,
+    onChange: formik.handleChange
+  })), /* @__PURE__ */ React4.createElement("div", {
+    className: "col-3"
+  }, /* @__PURE__ */ React4.createElement("button", {
+    className: "btn btn-primary",
+    type: "submit"
+  }, "Buscar")))), /* @__PURE__ */ React4.createElement("div", null, /* @__PURE__ */ React4.createElement("table", {
+    style: { width: "100%" }
+  }, /* @__PURE__ */ React4.createElement("thead", null, /* @__PURE__ */ React4.createElement("tr", null, /* @__PURE__ */ React4.createElement("th", null, "Producto"), /* @__PURE__ */ React4.createElement("th", null, "Acci\xF3n"))), /* @__PURE__ */ React4.createElement("tbody", null, products.map((product, id) => /* @__PURE__ */ React4.createElement("tr", {
+    key: id
+  }, /* @__PURE__ */ React4.createElement("td", null, product.nombre), /* @__PURE__ */ React4.createElement("td", null, /* @__PURE__ */ React4.createElement("button", {
+    className: "btn btn-sm btn-success",
+    onClick: () => selectedProduct(product)
+  }, "Agregar")))))))));
+};
+var findProduct_default = FindProductModal;
+
+// web/js/modules/sales/modals/openCashRegister.js
+var React5 = __toESM(require_react());
+var OpenCashRegister = ({ onPaid, show, onClose }) => {
+  const formik = useFormik({
+    initialValues: {
+      paid: ""
+    },
+    onSubmit: async ({ paid }) => {
+      const { data } = await openCashRegisert(paid);
+      onPaid(data);
+      handleClose();
+    }
+  });
+  const handleClose = () => {
+    onClose(modals.openCash);
+    formik.resetForm();
+  };
+  return /* @__PURE__ */ React5.createElement(Modal_default, {
+    show,
+    onHide: handleClose
+  }, /* @__PURE__ */ React5.createElement(Modal_default.Header, null, /* @__PURE__ */ React5.createElement("h5", {
+    className: "modal-title",
+    id: "exampleModalLabel"
+  }, "Abrir Caja"), /* @__PURE__ */ React5.createElement("button", {
+    type: "button",
+    className: "btn-close",
+    onClick: handleClose
+  })), /* @__PURE__ */ React5.createElement(Modal_default.Body, null, /* @__PURE__ */ React5.createElement("form", {
+    onSubmit: formik.handleSubmit
+  }, /* @__PURE__ */ React5.createElement("div", {
+    className: "form-group"
+  }, /* @__PURE__ */ React5.createElement("h4", null, "Recibe:"), /* @__PURE__ */ React5.createElement("input", {
+    className: "form-control",
+    name: "paid",
+    type: "number",
+    required: true,
+    value: formik.values.paid,
+    onChange: (e) => {
+      formik.handleChange(e);
+    }
+  })), /* @__PURE__ */ React5.createElement("div", {
+    className: "form-group"
+  }, /* @__PURE__ */ React5.createElement("button", {
+    className: "btn btn-primary",
+    disabled: formik.values.paid == 0,
+    type: "submit"
+  }, "Abrir")))));
+};
+var openCashRegister_default = OpenCashRegister;
+
+// web/js/modules/sales/modals/paidSale.js
+var React6 = __toESM(require_react());
+var PaidSale = ({ onPaid, show, onClose, total }) => {
+  const [cambio, setCambio] = React6.useState(0);
+  const formik = useFormik({
+    initialValues: {
+      paid: ""
+    },
+    onSubmit: async ({ paid }) => {
+      await onPaid({ total, cambio, paid });
+      handleClose();
+    }
+  });
+  const handleClose = () => {
+    setCambio(0);
+    onClose(modals.paidSale);
+    formik.resetForm();
+  };
+  React6.useEffect(() => {
+    setCambio(formik.values.paid - total);
+  }, [formik.values.paid]);
+  return /* @__PURE__ */ React6.createElement(Modal_default, {
+    show,
+    onHide: handleClose
+  }, /* @__PURE__ */ React6.createElement(Modal_default.Header, null, /* @__PURE__ */ React6.createElement("h5", {
+    className: "modal-title",
+    id: "exampleModalLabel"
+  }, "Pagar Venta"), /* @__PURE__ */ React6.createElement("button", {
+    type: "button",
+    className: "btn-close",
+    onClick: handleClose
+  })), /* @__PURE__ */ React6.createElement(Modal_default.Body, null, /* @__PURE__ */ React6.createElement("form", {
+    onSubmit: formik.handleSubmit
+  }, /* @__PURE__ */ React6.createElement("div", {
+    className: "form-group"
+  }, /* @__PURE__ */ React6.createElement("h4", null, "Total Venta:"), /* @__PURE__ */ React6.createElement("span", null, totalCurrency(total))), /* @__PURE__ */ React6.createElement("div", {
+    className: "form-group"
+  }, /* @__PURE__ */ React6.createElement("h4", null, "Recibe:"), /* @__PURE__ */ React6.createElement("input", {
+    className: "form-control",
+    name: "paid",
+    type: "number",
+    required: true,
+    value: formik.values.paid,
+    onChange: formik.handleChange
+  }), /* @__PURE__ */ React6.createElement("div", {
+    className: "form-group"
+  }, /* @__PURE__ */ React6.createElement("h4", null, "Cambio Venta:"), /* @__PURE__ */ React6.createElement("span", null, totalCurrency(cambio))), /* @__PURE__ */ React6.createElement("div", {
+    className: "col-3"
+  }, /* @__PURE__ */ React6.createElement("button", {
+    className: "btn btn-primary",
+    disabled: cambio < 0 || formik.values.paid == 0,
+    type: "submit"
+  }, "Pagar"))))));
+};
+var paidSale_default = PaidSale;
+
+// web/js/modules/sales/sale-detail.js
+var React7 = __toESM(require_react());
+var SaleDetail = ({ customer, total, onCancelSale, onCloseSale }) => {
+  return /* @__PURE__ */ React7.createElement(React7.Fragment, null, /* @__PURE__ */ React7.createElement("div", {
+    className: "col-4"
+  }, /* @__PURE__ */ React7.createElement("div", {
+    className: "card"
+  }, /* @__PURE__ */ React7.createElement("div", {
+    className: "card-body"
+  }, /* @__PURE__ */ React7.createElement("div", {
+    className: "row"
+  }, /* @__PURE__ */ React7.createElement("div", {
+    className: "col"
+  }, /* @__PURE__ */ React7.createElement("dl", null, /* @__PURE__ */ React7.createElement("dt", null, "Cliente"), /* @__PURE__ */ React7.createElement("dd", {
+    id: "infoCliente"
+  }, (customer == null ? void 0 : customer.nombre) || "---"), /* @__PURE__ */ React7.createElement("dt", null, "Total"), /* @__PURE__ */ React7.createElement("dd", {
+    id: "totalVentaDetalle"
+  }, totalCurrency(total))))), /* @__PURE__ */ React7.createElement("div", {
+    className: "row"
+  }, /* @__PURE__ */ React7.createElement("div", {
+    className: "col"
+  }, /* @__PURE__ */ React7.createElement("button", {
+    id: "cancelarVenta",
+    className: "btn btn-danger mr-1",
+    onClick: onCancelSale
+  }, "Cancelar"), /* @__PURE__ */ React7.createElement("button", {
+    className: "btn btn-success",
+    disabled: customer === null,
+    onClick: onCloseSale
+  }, "Finalizar")))))));
+};
+var sale_detail_default = SaleDetail;
+
+// web/js/modules/sales/tabla.js
+var React8 = __toESM(require_react());
+var ProductsSalesTable = ({ products, total, onUpdateQuantity, onDeleteProduct }) => {
+  return /* @__PURE__ */ React8.createElement(React8.Fragment, null, /* @__PURE__ */ React8.createElement("table", {
+    className: "table table-bordered"
+  }, /* @__PURE__ */ React8.createElement("thead", null, /* @__PURE__ */ React8.createElement("tr", null, /* @__PURE__ */ React8.createElement("td", null, "Producto"), /* @__PURE__ */ React8.createElement("td", null, "Precio"), /* @__PURE__ */ React8.createElement("td", null, "Cantidad"), /* @__PURE__ */ React8.createElement("td", null, "Total"), /* @__PURE__ */ React8.createElement("td", null))), /* @__PURE__ */ React8.createElement("tbody", null, products.map((product, id) => /* @__PURE__ */ React8.createElement("tr", {
+    key: id
+  }, /* @__PURE__ */ React8.createElement("td", null, product.nombre), /* @__PURE__ */ React8.createElement("td", null, totalCurrency(product.precio)), /* @__PURE__ */ React8.createElement("td", null, /* @__PURE__ */ React8.createElement("input", {
+    type: "number",
+    min: 1,
+    value: product.cantidad,
+    onChange: (e) => onUpdateQuantity(product, e.target.value)
+  })), /* @__PURE__ */ React8.createElement("td", null, totalCurrency(product.cantidad * product.precio)), /* @__PURE__ */ React8.createElement("td", null, /* @__PURE__ */ React8.createElement("button", {
+    className: "btn btn-sm btn-danger",
+    onClick: () => onDeleteProduct(product)
+  }, "Borrar"))))), /* @__PURE__ */ React8.createElement("tfoot", null, /* @__PURE__ */ React8.createElement("tr", {
+    className: "tx-blod"
+  }, /* @__PURE__ */ React8.createElement("td", {
+    colSpan: "2"
+  }), /* @__PURE__ */ React8.createElement("td", null, "TOTAL"), /* @__PURE__ */ React8.createElement("td", {
+    id: "totalVentaTabla"
+  }, totalCurrency(total))))));
+};
+var tabla_default = ProductsSalesTable;
+
+// web/js/modules/sales/index.js
+var container = document.getElementById("divContainer");
+var root = (0, import_client.createRoot)(container);
+var initModals = {
+  findProduct: false,
+  findCustomer: false,
+  closeCash: false,
+  openCash: false,
+  paidSale: false
+};
+var reducer = (state, action) => {
+  switch (action.modal) {
+    case modals.findProduct:
+      return __spreadProps(__spreadValues({}, state), { [action.modal]: action.value });
+    case modals.findCustomer:
+      return __spreadProps(__spreadValues({}, state), { [action.modal]: action.value });
+    case modals.paidSale:
+      return __spreadProps(__spreadValues({}, state), { [action.modal]: action.value });
+    case modals.openCash:
+      return __spreadProps(__spreadValues({}, state), { [action.modal]: action.value });
+    case modals.closeCash:
+      return __spreadProps(__spreadValues({}, state), { [action.modal]: action.value });
+  }
+};
+var Sales = () => {
+  const [products, setProducts] = React9.useState(() => {
+    if (hasItemLocalStorage(PRODUCTOS_VENTA_KEY)) {
+      const loadProducts = JSON.parse(getItemLocalStorage(PRODUCTOS_VENTA_KEY));
+      return loadProducts;
+    } else {
+      return [];
+    }
+  });
+  const [customer, setCustomer] = React9.useState(() => {
+    if (hasItemLocalStorage(CLIENTE_VENTA_KEY)) {
+      const laodClient = JSON.parse(getItemLocalStorage(CLIENTE_VENTA_KEY));
+      return laodClient;
+    } else {
+      return null;
+    }
+  });
+  const [fondoCaja, setFondoCaja] = React9.useState(() => {
+    if (hasItemLocalStorage(FONDO_KEY)) {
+      const fondo = JSON.parse(getItemLocalStorage(FONDO_KEY));
+      return fondo;
+    } else {
+      return null;
+    }
+  });
+  const [totalSale, setTotalSale] = React9.useState(0);
+  const [modalsState, dispatchModals] = React9.useReducer(reducer, initModals);
+  const handleCloseModal = (modal) => dispatchModals({ modal, value: false });
+  const addCustomerToSale = (customer2) => {
+    customer2 = __spreadProps(__spreadValues({}, customer2), {
+      idCliente: new Number(customer2.idCliente)
+    });
+    setItemLocalStorage(CLIENTE_VENTA_KEY, JSON.stringify(customer2));
+    setCustomer(customer2);
+  };
+  const cancelSale = () => {
+    setProducts([]);
+    setCustomer(null);
+  };
+  const closeSaleModal = () => {
+    dispatchModals({ modal: modals.paidSale, value: true });
+  };
+  const addProduct = (product) => {
+    console.log(product);
+    const precio = getCusotmerPrice(customer, product);
+    product = __spreadProps(__spreadValues({}, product), {
+      mayoreo: new Number(product.mayoreo),
+      medida: new Number(product.medida),
+      medio: new Number(product.medio),
+      venta: new Number(product.venta),
+      precio,
+      cantidad: 1
+    });
+    console.log(product);
+    setProducts([...products, product]);
+  };
+  const increaseAmountProduct = (product, quantity) => {
+    const newCantidad = product.cantidad + quantity;
+    const updatedProducts = products.map((productInSale) => productInSale.idProducto === product.idProducto ? __spreadProps(__spreadValues({}, productInSale), { cantidad: newCantidad }) : productInSale);
+    setProducts(updatedProducts);
+  };
+  const updateQuantityProduct = (product, quantity) => {
+    const newCantidad = quantity;
+    const updatedProducts = products.map((productInSale) => productInSale.idProducto === product.idProducto ? __spreadProps(__spreadValues({}, productInSale), { cantidad: newCantidad }) : productInSale);
+    setProducts(updatedProducts);
+  };
+  const checkProductIntoSale = (product) => {
+    return products.findIndex((productInSale) => productInSale.idProducto === product.idProducto) > -1;
+  };
+  const getProductIntoSale = (product) => {
+    const index = products.findIndex((producInSale2) => producInSale2.idProducto === product.idProducto);
+    const producInSale = products[index];
+    return producInSale;
+  };
+  const handleAddProduct = (product) => {
+    (async () => {
+      const anyProduct = await anyProductInStock(product);
+      if (anyProduct) {
+        if (checkProductIntoSale(product)) {
+          const productInSale = getProductIntoSale(product);
+          increaseAmountProduct(productInSale, 1);
+        } else {
+          addProduct(product);
+        }
+        dispatchModals({ modal: modals.findProduct, value: false });
+      } else {
+      }
+    })();
+  };
+  React9.useEffect(() => {
+    (() => {
+      setItemLocalStorage(PRODUCTOS_VENTA_KEY, JSON.stringify(products));
+      const total = products.reduce((sum, product) => sum += product.cantidad * getCusotmerPrice(customer, product), 0);
+      setTotalSale(total);
+    })();
+  }, [products, customer]);
+  React9.useEffect(() => {
+    (() => {
+      setItemLocalStorage(CLIENTE_VENTA_KEY, JSON.stringify(customer));
+    })();
+  }, [customer]);
+  React9.useEffect(() => {
+    if (!fondoCaja) {
+      dispatchModals({ modal: modals.openCash, value: true });
+    }
+  }, []);
+  React9.useEffect(() => {
+    setItemLocalStorage(FONDO_KEY, JSON.stringify(fondoCaja));
+  }, [fondoCaja]);
+  return /* @__PURE__ */ React9.createElement(React9.Fragment, null, /* @__PURE__ */ React9.createElement(breadcrum_default, {
+    openModal: ({ modal, value }) => {
+      dispatchModals({ modal, value });
+    },
+    customer
+  }), /* @__PURE__ */ React9.createElement("div", {
+    className: "row"
+  }, /* @__PURE__ */ React9.createElement("div", {
+    className: "col-8"
+  }, /* @__PURE__ */ React9.createElement("div", {
+    className: "card"
+  }, /* @__PURE__ */ React9.createElement("div", {
+    className: "card-body"
+  }, /* @__PURE__ */ React9.createElement("div", {
+    className: "row"
+  }, /* @__PURE__ */ React9.createElement("div", {
+    className: "col table-responsive"
+  }, /* @__PURE__ */ React9.createElement(tabla_default, {
+    products,
+    total: totalSale,
+    onDeleteProduct: (product) => {
+      setProducts(products.filter((p) => p.idProducto !== product.idProducto));
+    },
+    onUpdateQuantity: (product, cantidad) => {
+      updateQuantityProduct(product, cantidad);
+    }
+  })))))), /* @__PURE__ */ React9.createElement(sale_detail_default, {
+    customer,
+    total: totalSale,
+    onCloseSale: closeSaleModal,
+    onCancelSale: cancelSale
+  })), /* @__PURE__ */ React9.createElement(findProduct_default, {
+    show: modalsState.findProduct,
+    onClose: handleCloseModal,
+    selectedProduct: handleAddProduct
+  }), /* @__PURE__ */ React9.createElement(findCustomer_default, {
+    show: modalsState.findCustomer,
+    onClose: handleCloseModal,
+    selectedCustomer: addCustomerToSale
+  }), /* @__PURE__ */ React9.createElement(paidSale_default, {
+    show: modalsState.paidSale,
+    onClose: handleCloseModal,
+    total: totalSale,
+    onPaid: async ({ total, cambio, paid }) => {
+      const { data, success } = await closeSale({ total, cambio, paid, customer, products });
+      if (success) {
+        cancelSale();
+      }
+    }
+  }), /* @__PURE__ */ React9.createElement(openCashRegister_default, {
+    show: modalsState.openCash,
+    onClose: handleCloseModal,
+    onPaid: ({ id, monto }) => {
+      setFondoCaja({ id, monto });
+    }
+  }), /* @__PURE__ */ React9.createElement(closeCashRegister_default, {
+    show: modalsState.closeCash,
+    onClose: handleCloseModal,
+    montoInicial: (fondoCaja == null ? void 0 : fondoCaja.monto) || 0,
+    onPaid: async (total) => {
+      const { data, success } = await closeCashRegiser(fondoCaja.id, total);
+      if (success) {
+        removeItemLocalStorage2(FONDO_KEY);
+      }
+    }
+  }));
+};
+root.render(/* @__PURE__ */ React9.createElement(Sales, null));
 //# sourceMappingURL=index.js.map

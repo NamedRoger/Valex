@@ -1,6 +1,8 @@
 <?php
 	
+	namespace Verot\Upload;
 	session_start();
+	include('../vendor/autoload.php');
 	require 'functions.php';
 	$con = Conexion();
 
@@ -14,6 +16,7 @@
 	$medio = trim(mysqli_escape_string($con, $_POST['medio']));
 	$mayoreo = trim(mysqli_escape_string($con, $_POST['mayoreo']));
 	$idProducto = rand(10000, 99999); 
+	$dir = '../assets/img/productos/'.$idProducto.'/';
 
 	$consulta = $con->query("SELECT idSucursal FROM sucursales");
 	$num_row = $consulta->num_rows;
@@ -49,13 +52,36 @@
 										if ($num_row > 0) {
 											echo 1;
 										}else{
+											if (!file_exists($dir)) {
+											    mkdir($dir, 0777);
+											}
+											if (isset($_FILES['foto'])) {
+												$foto = new \Verot\Upload\Upload($_FILES['foto']);
+												if ($foto->uploaded) {
+													$foto->file_new_name_body = $idProducto;
+													$foto->file_new_name_ext = 'jpeg';
+													$foto->image_resize = true;
+													$foto->image_x = $foto->image_src_x/2;
+													$foto->image_ratio_y = true;
+													$foto->jpeg_quality = 100;
+													$foto->file_overwrite = true;
+													$foto->process($dir);
+													if ($foto->processed) {
+														$foto->clean();
+													    $foto = $dir.$foto->file_new_name_body = $idProducto.'.jpeg';
+													}
+												}
+											}else{
+												$foto = '';
+											}
+											
 											$consulta = $con->query("SELECT idSucursal FROM sucursales");
 											while ($row = $consulta->fetch_array()) {
 												$idSucursal = $row['idSucursal'];
 												$insertar = $con->query("INSERT INTO stock (idSucursal, idProducto) VALUES ('$idSucursal' , '$idProducto')");
 											}
 
-											$insertar = $con->query("INSERT INTO productos (codigo, idProducto, idCategoria, medida, nombre, descripcion, compra, venta, medio, mayoreo) VALUES ('$codigo', '$idProducto', '$idCategoria', '$medida', '$nombre', '$descripcion', '$compra', '$venta', '$medio', '$mayoreo' )");
+											$insertar = $con->query("INSERT INTO productos (foto, codigo, idProducto, idCategoria, medida, nombre, descripcion, compra, venta, medio, mayoreo) VALUES ('$foto', '$codigo', '$idProducto', '$idCategoria', '$medida', '$nombre', '$descripcion', '$compra', '$venta', '$medio', '$mayoreo' )");
 											if (!$insertar) {
 												printf("Error en ejecución contacte con soporte: %s\n", $con->error);
 											}else{
@@ -71,7 +97,3 @@
 			}
 		}
 	}
-
-	
-	
-	

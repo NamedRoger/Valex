@@ -32,10 +32,7 @@
            $sub_array[] = '<small>Paquete</small>';
           break;
       }
-      $sub_array[] = '<small>$ '.$row["compra"].'</small>';
       $sub_array[] = '<small>$ '.$row["venta"].'</small>';
-      $sub_array[] = '<small>$ '.$row["medio"].'</small>';
-      $sub_array[] = '<small>$ '.$row["mayoreo"].'</small>';
       if ($row["stock"] == 0) {
        $sub_array[] = '<button class="btn btn-iconbtn btn-sm" onclick="ModalStock('.$row['idStock'].')"><i class="fas fa-cubes" style="color: green;"></i></button>';
       }else{

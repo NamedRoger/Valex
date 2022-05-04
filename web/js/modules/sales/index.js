@@ -182,11 +182,11 @@ const Sales = () => {
                     <div className="card">
                         <div className="card-body">
                             <div className="row">
-                                <div className="col table-responsive">
+                                <div className="col table-responsive"> 
                                     <ProductsSalesTable
                                         products={products}
                                         total={totalSale}
-                                        onDeleteProduct={() => { }}
+                                        onDeleteProduct={(product) => { setProducts(products.filter((p) => p.idProducto !== product.idProducto)) }}
                                         onUpdateQuantity={(product, cantidad) => { updateQuantityProduct(product, cantidad) }}></ProductsSalesTable>
                                 </div>
                             </div>

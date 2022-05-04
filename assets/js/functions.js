@@ -127,58 +127,58 @@ $(document).ready( function () {
 });
 
 function GuardarSucursal(){
-	let sucursal = document.getElementById('sucursal').value;
-	let direccion = document.getElementById('direccion').value;
-	let telefono = document.getElementById('telefono').value;
-	$.ajax({
+    let sucursal = document.getElementById('sucursal').value;
+    let direccion = document.getElementById('direccion').value;
+    let telefono = document.getElementById('telefono').value;
+    $.ajax({
         url:'controller/guardarSucursal.php',
         type:'post',
         data:{sucursal, direccion, telefono},
         success:function(response){
-        	switch(response){
-        		case '1':
-					title = 'Error:';
-        			msg = 'Ingresa un nombre para la sucursal';
-        			Error(msg, title);
-        		break;
-        		case '2':
-					title = 'Error:';
-        			msg = 'Caracteres no validos en el campo "Nombre de la sucursal"';
-        			Error(msg, title);
-        		break;
-        		case '3':
-					title = 'Error:';
-        			msg = 'Ingresa una dirección para la sucursal';
-        			Error(msg, title);
-        		break;
-        		case '4':
-					title = 'Error:';
-        			msg = 'Caracteres no validos en el campo "Dirección de la sucursal"';
-        			Error(msg, title);
-        		break;
-        		case '5':
-					title = 'Error:';
-        			msg = 'Ingresa un teléfono para la sucursal';
-        			Error(msg, title);
-        		break;
-        		case '6':
-					title = 'Error:';
-        			msg = 'Caracteres no validos en el campo "Teléfono de la sucursal"';
-        			Error(msg, title);
-        		break;
-        		case '7':
+            switch(response){
+                case '1':
+                    title = 'Error:';
+                    msg = 'Ingresa un nombre para la sucursal';
+                    Error(msg, title);
+                break;
+                case '2':
+                    title = 'Error:';
+                    msg = 'Caracteres no validos en el campo "Nombre de la sucursal"';
+                    Error(msg, title);
+                break;
+                case '3':
+                    title = 'Error:';
+                    msg = 'Ingresa una dirección para la sucursal';
+                    Error(msg, title);
+                break;
+                case '4':
+                    title = 'Error:';
+                    msg = 'Caracteres no validos en el campo "Dirección de la sucursal"';
+                    Error(msg, title);
+                break;
+                case '5':
+                    title = 'Error:';
+                    msg = 'Ingresa un teléfono para la sucursal';
+                    Error(msg, title);
+                break;
+                case '6':
+                    title = 'Error:';
+                    msg = 'Caracteres no validos en el campo "Teléfono de la sucursal"';
+                    Error(msg, title);
+                break;
+                case '7':
                     document.getElementById("formSucursal").reset();
-        			$('#tablaSucursales').DataTable().ajax.reload();
-        			title = 'Exito:';
-        			msg = 'Sucursal registrada!';
-        			Success(msg, title)
-        		break;
+                    $('#tablaSucursales').DataTable().ajax.reload();
+                    title = 'Exito:';
+                    msg = 'Sucursal registrada!';
+                    Success(msg, title)
+                break;
                 default:
                     title = 'Error:';
                     msg = 'Sucursal no registrada comunicate con soporte';
                     Error(msg, title);
                 break;
-        	}
+            }
         }
     });
 
@@ -747,88 +747,99 @@ $(document).ready( function () {
     });
 });
 
-function GuardarProducto(){
-    let codigo =  document.getElementById('codigo').value;
-    let idCategoria =  document.getElementById('idCategoria').value;
-    let medida =  document.getElementById('medida').value;
-    let nombre =  document.getElementById('nombre').value;
-    let descripcion =  document.getElementById('descripcion').value;
-    let compra =  document.getElementById('compra').value;
-    let venta =  document.getElementById('venta').value;
-    let medio =  document.getElementById('medio').value;
-    let mayoreo =  document.getElementById('mayoreo').value;
-    $.ajax({
-        url:'controller/guardarProducto.php',
-        type:'post',
-        data:{codigo, idCategoria, medida, nombre, descripcion, compra, venta, medio, mayoreo},
-        success:function(response){
-            switch(response){
-                case '1':
-                    title = 'Error:';
-                    msg = 'Producto ya registrado, no puedes duplicar el nombre del producto';
-                    Error(msg, title);
-                break;
-                case '2':
-                    title = 'Error:';
-                    msg = 'Debes seleccionar una categoria para el producto';
-                    Error(msg, title);
-                break;
-                case '3':
-                    title = 'Error:';
-                    msg = 'Debes seleccionar una unidad de medida para el producto';
-                    Error(msg, title);
-                break;
-                case '4':
-                    title = 'Error:';
-                    msg = 'Caracteres no validos en el campo "Nombre del Producto"';
-                    Error(msg, title);
-                break;
-                case '5':
-                    title = 'Error:';
-                    msg = 'Caracteres no validos en el campo "Descripción del Producto"';
-                    Error(msg, title);
-                break;
-                case '6':
-                    title = 'Error:';
-                    msg = 'Caracteres no validos en el campo "Precio de compra"';
-                    Error(msg, title);
-                break;
-                case '7':
-                    title = 'Error:';
-                    msg = 'Caracteres no validos en el campo "Precio Venta"';
-                    Error(msg, title);
-                break;
-                case '8':
-                    title = 'Error:';
-                    msg = 'Caracteres no validos en el campo "Precio Medio-Mayoreo"';
-                    Error(msg, title);
-                break;
-                case '9':
-                    title = 'Error:';
-                    msg = 'Caracteres no validos en el campo "Precio Mayoreo"';
-                    Error(msg, title);
-                break;
-                case '100':
-                    title = 'Error:';
-                    msg = 'No se pueden registrar productos si no tienes registradas tus sucursales';
-                    Error(msg, title);
-                break;
-                case '10':
-                    document.getElementById("formProductos").reset();
-                    $('#tablaProductos').DataTable().ajax.reload();
-                    title = 'Producto:'
-                    msg = 'registrado con exito!'
-                    Success(msg, title);
-                break;
-                default:
-                    title = 'Error:';
-                    msg = 'Categoría no eliminada contacte a soporte!';
-                    Error(msg, title);
-                break;
-            }
-        }
+
+
+$(function(){
+    $('#empresa').on('click', function (e){
+        e.preventDefault(); 
+        let data = new FormData();
+            data.append('codigo', $('#codigo').prop('value'));
+            data.append('idCategoria', $('#idCategoria').prop('value'));
+            data.append('medida', $('#medida').prop('value'));
+            data.append('nombre', $('#nombre').prop('value'));
+            data.append('descripcion', $('#descripcion').prop('value'));
+            data.append('compra', $('#compra').prop('value'));
+            data.append('venta', $('#venta').prop('value'));
+            data.append('medio', $('#medio').prop('value'));
+            data.append('mayoreo', $('#mayoreo').prop('value'));
+            data.append('foto', $('#foto')[0].files[0]);
+            $.ajax({
+                url:'controller/guardarProducto.php',
+                type: 'POST',
+                contentType: false,
+                data: data,
+                processData: false,
+                cache: false,
+                success:function(response){
+                    switch(response){
+                        case '1':
+                            title = 'Error:';
+                            msg = 'Producto ya registrado, no puedes duplicar el nombre del producto';
+                            Error(msg, title);
+                        break;
+                        case '2':
+                            title = 'Error:';
+                            msg = 'Debes seleccionar una categoria para el producto';
+                            Error(msg, title);
+                        break;
+                        case '3':
+                            title = 'Error:';
+                            msg = 'Debes seleccionar una unidad de medida para el producto';
+                            Error(msg, title);
+                        break;
+                        case '4':
+                            title = 'Error:';
+                            msg = 'Caracteres no validos en el campo "Nombre del Producto"';
+                            Error(msg, title);
+                        break;
+                        case '5':
+                            title = 'Error:';
+                            msg = 'Caracteres no validos en el campo "Descripción del Producto"';
+                            Error(msg, title);
+                        break;
+                        case '6':
+                            title = 'Error:';
+                            msg = 'Caracteres no validos en el campo "Precio de compra"';
+                            Error(msg, title);
+                        break;
+                        case '7':
+                            title = 'Error:';
+                            msg = 'Caracteres no validos en el campo "Precio Venta"';
+                            Error(msg, title);
+                        break;
+                        case '8':
+                            title = 'Error:';
+                            msg = 'Caracteres no validos en el campo "Precio Medio-Mayoreo"';
+                            Error(msg, title);
+                        break;
+                        case '9':
+                            title = 'Error:';
+                            msg = 'Caracteres no validos en el campo "Precio Mayoreo"';
+                            Error(msg, title);
+                        break;
+                        case '100':
+                            title = 'Error:';
+                            msg = 'No se pueden registrar productos si no tienes registradas tus sucursales';
+                            Error(msg, title);
+                        break;
+                        case '10':
+                            document.getElementById("imagenPrevisualizacion").src="assets/img/box.png";
+                            document.getElementById("formProductos").reset();
+                            $('#tablaProductos').DataTable().ajax.reload();
+                            title = 'Producto:'
+                            msg = 'registrado con exito!'
+                            Success(msg, title);
+                        break;
+                        default:
+                            title = 'Error:';
+                            msg = 'Producto no registrado contacte a soporte!';
+                            Error(msg, title);
+                        break;
+                    }
+                }
+        });
     });
-}
+});
 
 function ModalEditarProducto(idProducto){
     $.get("modal/editarProducto.php","idProducto="+idProducto,
@@ -839,18 +850,24 @@ function ModalEditarProducto(idProducto){
     $('#modalActualizarProducto').modal('show');
 }
 function EditarProducto(){
-    let eCodigo =  document.getElementById('eCodigo').value;
-    let eNombre =  document.getElementById('eNombre').value;
-    let eDescripcion =  document.getElementById('eDescripcion').value;
-    let eCompra =  document.getElementById('eCompra').value;
-    let eVenta =  document.getElementById('eVenta').value;
-    let eMedio =  document.getElementById('eMedio').value;
-    let eMayoreo =  document.getElementById('eMayoreo').value;
-    let idProducto =  document.getElementById('idProducto').value;
+    let data = new FormData();
+    data.append('eCodigo', $('#eCodigo').prop('value'));
+    data.append('eNombre', $('#eNombre').prop('value'));
+    data.append('eDescripcion', $('#eDescripcion').prop('value'));
+    data.append('eCompra', $('#eCompra').prop('value'));
+    data.append('eVenta', $('#eVenta').prop('value'));
+    data.append('eMedio', $('#eMedio').prop('value'));
+    data.append('eMayoreo', $('#eMayoreo').prop('value'));
+    data.append('idProducto', $('#idProducto').prop('value'));
+    data.append('eFoto', $('#eFoto')[0].files[0]);
+
      $.ajax({
         url:'controller/editarProducto.php',
-        type:'post',
-        data:{eCodigo, eNombre, eDescripcion, eCompra, eVenta, eMedio, eMayoreo, idProducto},
+        type: 'POST',
+        contentType: false,
+        data: data,
+        processData: false,
+        cache: false,
         success:function(response){
             switch(response){
                 case '1':
@@ -954,9 +971,11 @@ function EliminarProducto(idProducto){
 ////////////////////////////////Stock///////////////////////////////////////////
 $(document).ready( function () {
     $('#tablaStock').DataTable({
-        bLengthChange: false,
+        lengthChange: false,
         bInfo: false,
         ordering: false,
+        dom: 'Bfrtip',
+        buttons: 'print',
         language: {
             search: '',
             searchPlaceholder: "Buscar",
@@ -968,10 +987,14 @@ $(document).ready( function () {
                 next: 'Próximo',
                 previous: 'Anterio '
             }
+
         },
-         ajax: 'controller/tablas/tablaStock.php',
+        buttons: ['copy', 'excel', 'pdf'],
+        ajax: 'controller/tablas/tablaStock.php',
     });
 });
+
+
 
 function ModalStock(idStock){
     $.get("modal/modalStock.php","idStock="+idStock,
@@ -1030,11 +1053,12 @@ function ModalMerma(idStock){
 
 function GuardarMerma(){
     let merma =  document.getElementById('merma').value;
+    let comentario =  document.getElementById('comentario').value;
     let idStock =  document.getElementById('idStock').value;
     $.ajax({
         url:'controller/guardarMerma.php',
         type:'post',
-        data:{idStock, merma},
+        data:{idStock, merma, comentario},
         success:function(response){
             switch(response){
                 case '1':
@@ -1150,6 +1174,7 @@ function GuardarCliente(){
                     Error(msg, title);
                 break;
                 case '4':
+                    $('#nuevoCliente').modal('toggle');
                     document.getElementById("formCliente").reset();
                     $('#tablaClientes').DataTable().ajax.reload();
                     title = 'Cliente:'

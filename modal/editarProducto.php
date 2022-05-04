@@ -7,8 +7,22 @@
 	$row = $consulta->fetch_array();
 
  ?>
-<form>
+<form enctype="multipart/formdata">
 	<div class="row row-sm">
+		<p style="text-align: center;">
+		<?php 
+			if ($row['foto'] == '') {
+				echo '<img id="eImagenPrevisualizacion" src="assets/img/box.png" width="150px">';
+			}else{
+				echo '<img id="eImagenPrevisualizacion" src="'.$row['foto'].'" width="150px">';
+			}
+		 ?>
+		
+		</p>
+		<div class="form-group">
+			<label>Foto</label>
+			<input type="file" id="eFoto" name="eFoto" class="form-control form-control-sm">
+		</div>
 		<div class="form-group">
 			<label>Codigo de barras</label>
 			<input type="text" id="eCodigo" name="eCodigo" class="form-control form-control-sm" value="<?php echo $row['codigo'] ?>">

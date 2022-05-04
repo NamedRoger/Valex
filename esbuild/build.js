@@ -1,27 +1,36 @@
 const path = require("path");
-const { execFile } = require("child_process");
+const esbuild = require("esbuild");
+const { getFiles } = require("./functions");
 require("dotenv").config();
 
-const enviroment = process.env.NODE_ENV || "production";
-const pathEsbuildConfig = path.join(process.cwd(), "esbuild");
+const {
+    NODE_ENV,
+} = process.env;
 
-const buildFile = `build.${enviroment}.js`;
+const cssModulesPlugin = require("esbuild-css-modules-plugin");
 
-const baseBuildPath = path.join(pathEsbuildConfig, buildFile);
+const basePath = path.join("web", "js", "modules");
+const buildPath = path.join("assets", "js", "modules");
 
-const child = execFile("node", [baseBuildPath],
-    (error, stdout) => {
-        
-        if (error !== null) {
-            throw error;
+getFiles(basePath, (files) => {
+    const loadFiles = files.map((file) => path.join(basePath, file));
+    esbuild.build({
+        entryPoints: loadFiles,
+        outdir: buildPath,
+        format: "esm",
+        bundle: true,
+        minify: NODE_ENV === "production",
+        splitting: true,
+        sourcemap: true,
+        target: ["chrome58", "firefox57", "safari11"],
+        loader: {
+            ".js": "jsx",
+        },
+        plugins: [cssModulesPlugin()],
+        define: {
+            "process.env.NODE_ENV": `'${NODE_ENV}'`,
         }
-        console.log(`${stdout} in ${enviroment } mode`);
-    });
-
-child.on("error", (error) => {
-    console.log(error)
-    child.kill();
+    })
+        .then(() => console.log(`⚡ Done in ${NODE_ENV} mode`))
+        .catch(() => process.exit(1));
 });
-
-
-
