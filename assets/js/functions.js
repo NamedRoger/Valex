@@ -72,8 +72,8 @@ function Login(){
         		case 8:
                     document.cookie = "session="+JSON.stringify(session);
                     const { rol } = session;
-                    const location = rol == 1 || 2 ? "reporte-ventas" : "ventas";
-        			window.location.href = "redirect.php";
+                    const location = rol == 3 ? "ventas" : "reporte-ventas";
+        			window.location.href = location;
         		break;
         	}
         }
