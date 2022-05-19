@@ -1,4 +1,4 @@
-export const API_URL = process.env.NODE_ENV === "production"? "http://donhuachinango.com" : "http://localhost";
+export const API_URL = process.env.NODE_ENV === "production" ? "http://donhuachinango.com" : "http://localhost";
 
 export const HTTP_HEADERS_BASE = {
     "Content-Type": "application/json",

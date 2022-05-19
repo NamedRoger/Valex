@@ -3,8 +3,10 @@ import { Modal } from "react-bootstrap";
 import { useFormik } from "formik";
 import { modals } from "../constants";
 import { findCustomer } from "../request";
+import { CustomerContext } from "../../../providers/useCustomerProvider";
 
-const FindCustomerModal = ({ selectedCustomer, show, onClose }) => {
+const FindCustomerModal = ({ show, onClose }) => {
+    const { addCustomerToSale } = React.useContext(CustomerContext);
     const [customers, setCustomers] = React.useState([]);
 
     const formik = useFormik({
@@ -61,7 +63,7 @@ const FindCustomerModal = ({ selectedCustomer, show, onClose }) => {
                                             <button
                                                 className="btn btn-sm btn-success"
                                                 onClick={() => {
-                                                    selectedCustomer(customer);
+                                                    addCustomerToSale(customer);
                                                     handleClose();
                                                 }}>
                                                 Agregar

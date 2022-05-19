@@ -2,14 +2,16 @@ import {
   SessionContext,
   SessionProvider,
   require_index_cjs
-} from "../chunk-77KSCIPS.js";
+} from "../chunk-DMFY5QYF.js";
+import {
+  require_client
+} from "../chunk-HOMDFH47.js";
 import {
   __toESM,
   get,
-  require_client,
   require_react,
   useFormik
-} from "../chunk-7AN26WI7.js";
+} from "../chunk-SRWE7FCD.js";
 
 // web/js/modules/cash-register/index.js
 var React3 = __toESM(require_react());

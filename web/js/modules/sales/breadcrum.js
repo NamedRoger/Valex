@@ -1,7 +1,10 @@
 import * as React from "react";
 import { modals } from "./constants";
 import { Dropdown } from "react-bootstrap";
-const SaleBreadcrum = ({openModal, customer}) => {
+import { CustomerContext } from "../../providers/useCustomerProvider";
+
+const SaleBreadcrum = ({openModal}) => {
+    const { customer } = React.useContext(CustomerContext);
     return (
         <>
             <div className="breadcrumb-header justify-content-between">

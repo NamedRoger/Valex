@@ -1,7 +1,9 @@
 import * as React from "react";
+import { CustomerContext } from "../../providers/useCustomerProvider";
 import { totalCurrency } from "../../utils/functions";
 
-const SaleDetail = ({ customer, total, onCancelSale, onCloseSale }) => {
+const SaleDetail = ({ total, onCancelSale, onCloseSale }) => {
+    const { customer } = React.useContext(CustomerContext);
     return (
         <>
             <div className="col-4">

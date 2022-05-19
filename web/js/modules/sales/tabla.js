@@ -1,7 +1,9 @@
 import * as React from "react";
+import { SalesContext } from "../../providers/useSale";
 import { getCusotmerPrice, totalCurrency } from "../../utils/functions";
 
-const ProductsSalesTable = ({ products, total, onUpdateQuantity, onDeleteProduct }) => {
+const ProductsSalesTable = ({total, onUpdateQuantity, onDeleteProduct }) => {
+    const { products } = React.useContext(SalesContext);
     return (
         <>
             <table className="table table-bordered" >
